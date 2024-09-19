@@ -16,11 +16,11 @@ application {
 	mainClass = "hexlet.code.AppApplication"
 }
 
-java {
+/*java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
-}
+}*/
 
 configurations {
 	compileOnly {
