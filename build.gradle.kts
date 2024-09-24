@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
 	java
 	id("org.springframework.boot") version "3.3.3"
@@ -16,12 +19,6 @@ application {
 	mainClass = "hexlet.code.AppApplication"
 }
 
-/*java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}*/
-
 configurations {
 	compileOnly {
 		extendsFrom(configurations.annotationProcessor.get())
@@ -33,8 +30,16 @@ repositories {
 }
 
 dependencies {
+
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("org.postgresql:postgresql")
+
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.springframework.boot:spring-boot-starter")
 	compileOnly("org.projectlombok:lombok")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -48,9 +53,16 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-	testLogging {
+/*	testLogging {
 		//exceptionFormat = TestExceptionFormat.FULL
 		//events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+		// showStackTraces = true
+		// showCauses = true
+		showStandardStreams = true
+	}*/
+	testLogging {
+		exceptionFormat = TestExceptionFormat.FULL
+		events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
 		// showStackTraces = true
 		// showCauses = true
 		showStandardStreams = true

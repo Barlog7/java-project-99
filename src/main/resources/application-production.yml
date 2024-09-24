@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    password: 6mW63QdQopPCD5RFytOm81ics3ZNz8p9
+    url: postgresql://user99:6mW63QdQopPCD5RFytOm81ics3ZNz8p9@dpg-crpbngjtq21c7398jcdg-a/database99
+    username: user99
