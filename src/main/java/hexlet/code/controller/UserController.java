@@ -6,6 +6,7 @@ import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.utils.PasswordHashing;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         var user = userMapper.map(userCreateDTO);
+        // шифруем пароль
+        var pass = user.getPassword();
+        var passHash = PasswordHashing.getHashPass(pass);
+        user.setPassword(passHash);
         userRepository.save(user);
         var userDTO = userMapper.map(user);
         return userDTO;

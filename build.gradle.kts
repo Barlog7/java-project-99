@@ -30,6 +30,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.mindrot:jbcrypt:0.4")
 
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 
