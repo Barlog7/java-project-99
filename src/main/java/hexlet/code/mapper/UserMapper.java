@@ -5,11 +5,7 @@ import hexlet.code.dto.UserDTO;
 import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.model.User;
 //import org.mapstruct.*;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 /*@Mapper(
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -32,8 +28,8 @@ public abstract class UserMapper {
     public abstract void update(PostUpdateDTO dto, @MappingTarget Post model);
 */
 
-
-    public abstract UserDTO map(User user);
+    @Mapping(target = "id", source = "id")
+    public abstract UserDTO mapModel(User user);
 
     public abstract User map(UserCreateDTO dto);
 

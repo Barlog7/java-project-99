@@ -32,19 +32,20 @@ public class UserController {
 
     @Autowired
     private UserMapper userMapper;
-    @GetMapping("/")
+    @GetMapping("")
     public List<UserDTO> index() {
         var users = userRepository.findAll();
-        return users.stream()
-                .map(userMapper::map)
+        var usersDTO = users.stream()
+                .map(userMapper::mapModel)
                 .toList();
+        return usersDTO;
     }
 
     @GetMapping("/{id}")
     public UserDTO show(@PathVariable long id) {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
-        var userDTO = userMapper.map(user);
+        var userDTO = userMapper.mapModel(user);
         return userDTO;
     }
 
@@ -63,7 +64,7 @@ public class UserController {
         var passHash = PasswordHashing.getHashPass(pass);
         user.setPassword(passHash);
         userRepository.save(user);
-        var userDTO = userMapper.map(user);
+        var userDTO = userMapper.mapModel(user);
         return userDTO;
     }
 
@@ -73,8 +74,12 @@ public class UserController {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         userMapper.update(productData, user);
+        if (productData.getPassword().isPresent()) {
+            var passHash = PasswordHashing.getHashPass(productData.getPassword().get());
+            user.setPassword(passHash);
+        }
         userRepository.save(user);
-        return userMapper.map(user);
+        return userMapper.mapModel(user);
     }
 }
 

@@ -49,12 +49,26 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 
 	annotationProcessor("org.projectlombok:lombok")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("org.junit.jupiter:junit-jupiter")
-	testImplementation(platform("org.junit:junit-bom:5.9.1"))
+	//testImplementation("org.junit.jupiter:junit-jupiter")
+	//testImplementation(platform("org.junit:junit-bom:5.9.1"))
+
+	testImplementation(platform("org.junit:junit-bom:5.10.0"))
+	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
+
+	implementation("net.datafaker:datafaker:2.0.1")
+	implementation("org.instancio:instancio-junit:3.3.0")
+
+
+	//testImplementation("org.springframework.boot:spring-boot-starter-test")
+// Понадобится когда мы начнем работать с аутентификацией
+
+
 }
 
 tasks.withType<Test> {
