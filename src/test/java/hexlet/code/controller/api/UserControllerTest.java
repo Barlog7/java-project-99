@@ -154,10 +154,10 @@ class UserControllerTest {
                 new TypeReference<List<UserDTO>>(){});*/
         List<UserDTO> userDTOS = om.readValue(body, new TypeReference<List<UserDTO>>(){});
 
-        var actual = userDTOS.stream().map(userMapper::toEntity).toList();
+        var actual = userDTOS.stream().map(dto -> userMapper.map(dto, userRepository.findById(dto.getId()).get())   ).toList();
 
         var expected = userRepository.findAll();
-        var userDTOExp = expected.stream().map(userMapper::mapModel).toList();
+        //var userDTOExp = expected.stream().map(userMapper::mapModel).toList();
 
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
         //assertThat(userDTOS).containsExactlyInAnyOrderElementsOf(userDTOExp);

@@ -27,6 +27,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(of = {"email"})
 public class User implements BaseEntity{
     @Id
     @GeneratedValue(strategy = IDENTITY)

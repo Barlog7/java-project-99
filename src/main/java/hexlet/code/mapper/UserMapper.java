@@ -33,11 +33,12 @@ public abstract class UserMapper {
 
     public abstract User map(UserCreateDTO dto);
 
-    public abstract User map(UserDTO dto);
+    //@Mapping(target = "email", source = "email")
+    public abstract User map(UserDTO dto, @MappingTarget User user);
 
     public abstract void update(UserUpdateDTO dto, @MappingTarget User user);
 
-    public abstract User toEntity(UserDTO dto);
+    //public abstract void toEntity(UserDTO dto, @MappingTarget User user);
 
 
 }
