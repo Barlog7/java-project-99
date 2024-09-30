@@ -20,19 +20,13 @@ import org.mapstruct.ReportingPolicy;
 )*/
 @Mapper(
         // Подключение JsonNullableMapper
-        uses = { JsonNullableMapper.class },
+        uses = {JsonNullableMapper.class, ReferenceMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
+//@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public abstract class UserMapper {
-/*
-    @Mapping(target = "category", source = "categoryId")
-    public abstract Product map(ProductCreateDTO dto);
-
-    @Mapping(target = "title", source = "name")
-    public abstract void update(PostUpdateDTO dto, @MappingTarget Post model);
-*/
 
     @Mapping(target = "id", source = "id")
     public abstract UserDTO mapModel(User user);
@@ -42,6 +36,8 @@ public abstract class UserMapper {
     public abstract User map(UserDTO dto);
 
     public abstract void update(UserUpdateDTO dto, @MappingTarget User user);
+
+    public abstract User toEntity(UserDTO dto);
 
 
 }
