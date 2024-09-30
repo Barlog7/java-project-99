@@ -44,6 +44,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.springframework.boot:spring-boot-starter")
+
 	compileOnly("org.projectlombok:lombok")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -54,8 +55,6 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	//testImplementation("org.junit.jupiter:junit-jupiter")
-	//testImplementation(platform("org.junit:junit-bom:5.9.1"))
 
 	testImplementation(platform("org.junit:junit-bom:5.10.0"))
 	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
