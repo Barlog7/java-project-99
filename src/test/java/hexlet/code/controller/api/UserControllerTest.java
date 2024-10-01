@@ -86,6 +86,26 @@ class UserControllerTest {
 
     }
 
+    @Test
+    void checkValidate() throws Exception {
+        //var data = generateUser();
+        var userFind = generateUser("aaaa");
+        //var savedUser = userRepository.save(user);
+        var passHash = PasswordHashing.getHashPass(userFind.getPassword());
+
+        var request = MockMvcRequestBuilders.post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(userFind));
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+        //var userTest = userRepository.findByEmail(userFind.getEmail()).get();
+
+        //assertNotNull(userTest);
+
+
+    }
+
 
 
     @Test
