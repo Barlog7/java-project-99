@@ -13,7 +13,6 @@ import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,7 +27,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = {"email"})
-public class User implements BaseEntity{
+public class User implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;

@@ -77,7 +77,7 @@ public class UserController {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         userMapper.update(productData, user);
-        if ( jsonNullableMapper.isPresent( productData.getPassword() ) ) {
+        if (jsonNullableMapper.isPresent(productData.getPassword())) {
             //if (productData.getPassword().isPresent()) {
             var passHash = PasswordHashing.getHashPass(productData.getPassword().get());
             user.setPassword(passHash);

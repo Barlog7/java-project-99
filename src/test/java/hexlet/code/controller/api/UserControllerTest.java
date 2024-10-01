@@ -1,38 +1,27 @@
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import hexlet.code.dto.UserDTO;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
-import net.datafaker.Faker;
-import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.instancio.Select;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.http.RequestEntity.post;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,8 +30,6 @@ import java.util.List;
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    //@Autowired
-    //private Faker faker;
     @Autowired
     private MockMvc mockMvc;
 
@@ -70,31 +57,29 @@ class UserControllerTest {
     User user;
     User savedUser;
 
-
-  @BeforeEach
-  public void setUp() {
-      //System.out.printf("1");
+    @BeforeEach
+    public void setUp() {
         user = generateUser("john@google.com");
-     if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
-         savedUser = userRepository.save(user);
-         var passHash = PasswordHashing.getHashPass(user.getPassword());
-     }
+        if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            savedUser = userRepository.save(user);
+            var passHash = PasswordHashing.getHashPass(user.getPassword());
+        }
     }
 
     @Test
     void create() throws Exception {
         //var data = generateUser();
-        var user = generateUser("aaaa@google.com");
+        var userFind = generateUser("aaaa@google.com");
         //var savedUser = userRepository.save(user);
-        var passHash = PasswordHashing.getHashPass(user.getPassword());
+        var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
         var request = MockMvcRequestBuilders.post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(user));
+                .content(om.writeValueAsString(userFind));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
-        var userTest = userRepository.findByEmail(user.getEmail()).get();
+        var userTest = userRepository.findByEmail(userFind.getEmail()).get();
 
         assertNotNull(userTest);
 
@@ -107,13 +92,13 @@ class UserControllerTest {
     void show() throws Exception {
         //var user = generateUser();
         //var savedUser = userRepository.save(user);
-        var savedUser = userRepository.findByEmail("john@google.com").get();
-        var id = savedUser.getId();
-        var result = mockMvc.perform(get("/api/users/"+ savedUser.getId()))
+        var savedFind = userRepository.findByEmail("john@google.com").get();
+        var id = savedFind.getId();
+        var result = mockMvc.perform(get("/api/users/" + savedFind.getId()))
                 .andExpect(status().isOk()).andReturn().getResponse();
         var body = result.getContentAsString();
         assertThatJson(body).and(
-                v -> v.node("email").isEqualTo(savedUser.getEmail()));
+                v -> v.node("email").isEqualTo(savedFind.getEmail()));
     }
 
 
@@ -152,9 +137,11 @@ class UserControllerTest {
         assertThatJson(body).isArray();
         /*List<UserDTO> userDTOS = om.readValue(body,
                 new TypeReference<List<UserDTO>>(){});*/
-        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<List<UserDTO>>(){});
+        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<List<UserDTO>>() { });
 
-        var actual = userDTOS.stream().map(dto -> userMapper.map(dto, userRepository.findById(dto.getId()).get())   ).toList();
+        var actual = userDTOS.stream()
+                .map(dto -> userMapper.map(dto, userRepository.findById(dto.getId()).get()))
+                .toList();
 
         var expected = userRepository.findAll();
         //var userDTOExp = expected.stream().map(userMapper::mapModel).toList();
@@ -169,6 +156,8 @@ class UserControllerTest {
         /*var user = generateUser();
         var savedUser = userRepository.save(user);*/
 
-        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId())).andExpect(status().isNoContent());
+        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()))
+                .andExpect(status()
+                .isNoContent());
     }
 }

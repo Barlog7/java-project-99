@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
 	java
+	id("io.freefair.lombok") version "8.6"
 	id("org.springframework.boot") version "3.3.3"
 	id("io.spring.dependency-management") version "1.1.6"
 	checkstyle
@@ -34,8 +35,8 @@ dependencies {
 
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 
-	implementation("org.mapstruct:mapstruct:1.5.5.Final")
-	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+	implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
 
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
@@ -45,14 +46,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.springframework.boot:spring-boot-starter")
 
-	compileOnly("org.projectlombok:lombok")
+	//compileOnly("org.projectlombok:lombok")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 
-	annotationProcessor("org.projectlombok:lombok")
+	//annotationProcessor("org.projectlombok:lombok")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
