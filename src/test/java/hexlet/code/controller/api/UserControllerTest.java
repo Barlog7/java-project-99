@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,11 +56,14 @@ class UserControllerTest {
                 .ignore(Select.field(User::getUpdatedAt))
                 .create();
     }
-    User user;
-    User savedUser;
+    private User user;
+    private User savedUser;
+
+    private JwtRequestPostProcessor token;
 
     @BeforeEach
     public void setUp() {
+        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         user = generateUser("john@google.com");
         if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
             savedUser = userRepository.save(user);
@@ -74,6 +79,7 @@ class UserControllerTest {
         var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
         var request = MockMvcRequestBuilders.post("/api/users")
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(userFind));
 
@@ -94,6 +100,7 @@ class UserControllerTest {
         var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
         var request = MockMvcRequestBuilders.post("/api/users")
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(userFind));
 
@@ -114,7 +121,7 @@ class UserControllerTest {
         //var savedUser = userRepository.save(user);
         var savedFind = userRepository.findByEmail("john@google.com").get();
         var id = savedFind.getId();
-        var result = mockMvc.perform(get("/api/users/" + savedFind.getId()))
+        var result = mockMvc.perform(get("/api/users/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
         var body = result.getContentAsString();
         assertThatJson(body).and(
@@ -133,6 +140,7 @@ class UserControllerTest {
         data.put("firstName", "Mike");
 
         var request = MockMvcRequestBuilders.put("/api/users/" + savedUser.getId())
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
@@ -150,7 +158,7 @@ class UserControllerTest {
         //user.setPassword(passHash);
 
         //var savedUser = userRepository.save(user);
-        var result = mockMvc.perform(get("/api/users"))
+        var result = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
 
         var body = result.getContentAsString();
@@ -176,7 +184,7 @@ class UserControllerTest {
         /*var user = generateUser();
         var savedUser = userRepository.save(user);*/
 
-        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()))
+        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(jwt()))
                 .andExpect(status()
                 .isNoContent());
     }

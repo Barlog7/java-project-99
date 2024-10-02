@@ -17,5 +17,9 @@ spring:
   application:
     name: app
 
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
 server:
   address: 0.0.0.0
