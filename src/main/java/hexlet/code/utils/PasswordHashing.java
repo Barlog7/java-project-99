@@ -16,5 +16,6 @@ public class PasswordHashing {
             System.out.println("Пароль неверный");
         }*/
         return hashedPassword;
+        //return password;
     }
 }
