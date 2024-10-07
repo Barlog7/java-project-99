@@ -54,6 +54,7 @@ class UserControllerTest {
                 .supply(Select.field(User::getPassword), () -> "1234")
                 .ignore(Select.field(User::getCreatedAt))
                 .ignore(Select.field(User::getUpdatedAt))
+                .ignore(Select.field(User::getTasks))
                 .create();
     }
     private User user;
