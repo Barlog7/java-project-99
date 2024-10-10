@@ -3,6 +3,7 @@ package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.TaskStatusCreateDTO;
 import hexlet.code.dto.TaskStatusDTO;
 
 import hexlet.code.mapper.TaskStatusMaper;
@@ -50,6 +51,13 @@ class TaskStatusControllerTest {
 
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
+    private TaskStatusCreateDTO generateTaskStatusCreateDTO(String name, String slug) {
+        return Instancio.of(TaskStatusCreateDTO.class)
+                .supply(Select.field(TaskStatusCreateDTO::getName), () -> name)
+                .supply(Select.field(TaskStatusCreateDTO::getSlug), () -> slug)
+                .create();
+    }
+
     private TaskStatus generateTaskStatus(String name, String slug) {
         return Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
@@ -58,6 +66,7 @@ class TaskStatusControllerTest {
                 .ignore(Select.field(TaskStatus::getCreatedAt))
                 .create();
     }
+
 
     private TaskStatus taskTest;
 
@@ -94,13 +103,14 @@ class TaskStatusControllerTest {
     @Test
     void create() throws Exception {
         //taskStatusRepository.save(taskTest);
+        var taskTestStatusCreate = generateTaskStatusCreateDTO("test status1", "test_status1");
         var request = MockMvcRequestBuilders.post("/api/task_statuses")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(taskTest));
+                .content(om.writeValueAsString(taskTestStatusCreate));
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
-        var userTest = taskStatusRepository.findBySlug("test_status").get();
+        var userTest = taskStatusRepository.findBySlug("test_status1").get();
 
         assertNotNull(userTest);
     }

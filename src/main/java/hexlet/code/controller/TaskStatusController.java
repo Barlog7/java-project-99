@@ -9,6 +9,7 @@ import hexlet.code.repository.TaskStatusRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,12 +31,15 @@ public class TaskStatusController {
     private TaskStatusMaper taskStatusMaper;
 
     @GetMapping("")
-    public List<TaskStatusDTO> index() {
+    public ResponseEntity<List<TaskStatusDTO>> index() {
         var tasks = taskStatusRepository.findAll();
-        var taskDTO = tasks.stream()
+        var taskStatusDTO = tasks.stream()
                 .map(taskStatusMaper::mapTaskStatus)
                 .toList();
-        return taskDTO;
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(taskStatusDTO.size()))
+                .body(taskStatusDTO);
+        //return taskDTO;
     }
     @GetMapping("/{id}")
     public TaskStatusDTO show(@PathVariable long id) {

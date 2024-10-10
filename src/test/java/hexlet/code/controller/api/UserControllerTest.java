@@ -1,7 +1,9 @@
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -10,6 +12,7 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,6 +60,15 @@ class UserControllerTest {
                 .ignore(Select.field(User::getTasks))
                 .create();
     }
+
+    private UserCreateDTO generateUserDTO(String email) {
+        return Instancio.of(UserCreateDTO.class)
+                .ignore(Select.field(UserCreateDTO::getFirstName))
+                .ignore(Select.field(UserCreateDTO::getLastName))
+                .supply(Select.field(UserCreateDTO::getEmail), () -> email)
+                .supply(Select.field(UserCreateDTO::getPassword), () -> "1234")
+                .create();
+    }
     private User user;
     private User savedUser;
 
@@ -75,8 +87,11 @@ class UserControllerTest {
     @Test
     void create() throws Exception {
         //var data = generateUser();
-        var userFind = generateUser("aaaa@google.com");
+        //var userFind = generateUser("aaaa@google.com");
         //var savedUser = userRepository.save(user);
+        //var passHash = PasswordHashing.getHashPass(userFind.getPassword());
+
+        var userFind = generateUserDTO("aaaa@google.com");
         var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
         var request = MockMvcRequestBuilders.post("/api/users")
@@ -139,6 +154,9 @@ class UserControllerTest {
         /*var userCur = userRepository.findByEmail("john@google.com").get();*/
         var data = new HashMap<>();
         data.put("firstName", "Mike");
+/*        var updateUser = new UserUpdateDTO();
+        JsonNullable<String> nullableParam;
+        updateUser.setFirstName("Mike");*/
 
         var request = MockMvcRequestBuilders.put("/api/users/" + savedUser.getId())
                 .with(token)
