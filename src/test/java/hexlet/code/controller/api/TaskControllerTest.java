@@ -102,23 +102,24 @@ class TaskControllerTest {
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-        if (taskRepository.findByName("test task").isEmpty()) {
+/*        if (taskRepository.findByName("test task").isEmpty()) {
             User user = generateUser("some@mail.com", "1234");
             TaskStatus taskS = generateTaskStatus("task status test", "task_status_test");
             Task taskTest = generateTask("test task", "test task description", user, taskS);
             taskRepository.save(taskTest);
-        }
+        }*/
         //taskRepository.save(taskTest);
 
     }
 
     @Test
     void index() throws Exception {
-        //var taskTestIndex = generateTask("test task", "test task description");
-        /*taskRepository.deleteAll();
-        taskRepository.save(taskTest);*/
-        //Task taskTestIndex = generateTask("test status index", "test_status_index", user, taskS);
-        //taskRepository.save(taskTestIndex);
+        if (taskRepository.findByName("test task").isEmpty()) {
+            User user = generateUser("some@mail.com", "1234");
+            TaskStatus taskS = generateTaskStatus("task status test", "task_status_test");
+            Task taskTest = generateTask("test task", "test task description", user, taskS);
+            taskRepository.save(taskTest);
+        }
         var count = taskRepository.count();
         var result = mockMvc.perform(get("/api/tasks").with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
@@ -130,6 +131,12 @@ class TaskControllerTest {
 
     @Test
     void show() throws Exception {
+        if (taskRepository.findByName("test task").isEmpty()) {
+            User user = generateUser("someShow@mail.com", "1234");
+            TaskStatus taskS = generateTaskStatus("task status test show", "task_status_test_show");
+            Task taskTest = generateTask("test task show", "test task description show", user, taskS);
+            taskRepository.save(taskTest);
+        }
         //Task taskTestShow = generateTask("test status show", "test_status_show", user, taskS);
         //taskRepository.save(taskTestShow);
         var savedFind = taskRepository.findById(1L).get();
@@ -184,9 +191,13 @@ class TaskControllerTest {
 
     @Test
     void update() throws Exception {
+        User user = generateUser("someupdate@mail.com", "1234");
+        TaskStatus taskS = generateTaskStatus("task status test update", "task_status_test_update");
+        Task taskTestSave = generateTask("test task update", "test task description update", user, taskS);
+        taskRepository.save(taskTestSave);
         var data = new HashMap<>();
-        data.put("title", "test task update");
-        var taskFind = taskRepository.findByName("test task").get();
+        data.put("title", "test task update change");
+        var taskFind = taskRepository.findByName("test task update").get();
         var request = MockMvcRequestBuilders.put("/api/tasks/" + taskFind.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -195,7 +206,7 @@ class TaskControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
         var taskTest = taskRepository.findById(taskFind.getId()).get();
-        assertThat(taskTest.getName()).isEqualTo(("test task update"));
+        assertThat(taskTest.getName()).isEqualTo(("test task update change"));
 
     }
 }

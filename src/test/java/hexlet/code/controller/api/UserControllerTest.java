@@ -3,7 +3,7 @@ package hexlet.code.controller.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserDTO;
-import hexlet.code.dto.UserUpdateDTO;
+
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -12,7 +12,7 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openapitools.jackson.nullable.JsonNullable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
