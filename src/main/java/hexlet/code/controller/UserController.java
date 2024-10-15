@@ -59,7 +59,11 @@ public class UserController {
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        var user = userRepository.findById(id).get();
+        if (user.getTasks().isEmpty()) {
+            userRepository.deleteById(id);
+        }
+
     }
 
     @PostMapping(path = "")
