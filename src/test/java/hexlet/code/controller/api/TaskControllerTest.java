@@ -158,6 +158,10 @@ class TaskControllerTest {
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/tasks/{id}", taskFind.getId()).with(jwt()))
                 .andExpect(status()
                         .isNoContent());
+        var userFind  = userRepository.findByEmail("someDelete@mail.com").get();
+        var tasksFindFromUser = userFind.getTasks();
+        var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_delete").get();
+        var tasksFindFromTaskStatus = taskStatusFind.getTasks();
     }
 
     @Test

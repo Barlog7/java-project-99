@@ -6,6 +6,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,8 +32,10 @@ public class Task implements BaseEntity {
     private String description;
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "task_status_id")
     private TaskStatus taskStatus;
     @ManyToOne
+    @JoinColumn(name = "users_id")
     private User assignee;
     @CreatedDate
     private Instant createdAt;
