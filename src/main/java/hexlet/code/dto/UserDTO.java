@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class UserDTO {
 
     private String email;
 
-    private LocalDate createdAt;
+    private Instant createdAt;
 
-    private LocalDate updatedAt;
+    private Instant updatedAt;
 }

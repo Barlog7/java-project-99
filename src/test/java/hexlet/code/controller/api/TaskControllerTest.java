@@ -24,6 +24,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -141,7 +142,15 @@ class TaskControllerTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
+        User user = generateUser("someDelete@mail.com", "1234d");
+        TaskStatus taskS = generateTaskStatus("task status test delete", "task_status_test_delete");
+        Task taskTest = generateTask("test task delete", "test task description delete", user, taskS);
+        taskRepository.save(taskTest);
+        var taskFind = taskRepository.findByName("test task delete").get();
+        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/tasks/{id}", taskFind.getId()).with(jwt()))
+                .andExpect(status()
+                        .isNoContent());
     }
 
     @Test
@@ -166,9 +175,27 @@ class TaskControllerTest {
         var userTest = taskRepository.findByName("test task create").get();
 
         assertNotNull(userTest);
+        var userFind  = userRepository.findByEmail("somenew@mail.com").get();
+        var tasksFindFromUser = userFind.getTasks();
+        var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_create").get();
+        var tasksFindFromTaskStatus = taskStatusFind.getTasks();
+        System.out.println("Test");
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
+        var data = new HashMap<>();
+        data.put("title", "test task update");
+        var taskFind = taskRepository.findByName("test task").get();
+        var request = MockMvcRequestBuilders.put("/api/tasks/" + taskFind.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+        var taskTest = taskRepository.findById(taskFind.getId()).get();
+        assertThat(taskTest.getName()).isEqualTo(("test task update"));
+
     }
 }

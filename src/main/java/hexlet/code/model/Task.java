@@ -12,7 +12,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -35,5 +35,5 @@ public class Task implements BaseEntity {
     @ManyToOne
     private User assignee;
     @CreatedDate
-    private LocalDate createdAt;
+    private Instant createdAt;
 }
