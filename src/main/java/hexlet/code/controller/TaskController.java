@@ -4,6 +4,7 @@ import hexlet.code.dto.TaskDTO;
 import hexlet.code.dto.TaskCreateDTO;
 import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
+import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
@@ -39,6 +40,10 @@ public class TaskController {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+
+
+    @Autowired
+    private JsonNullableMapper jsonNullableMapper;
 
     @GetMapping("")
     public ResponseEntity<List<TaskDTO>> index() {
@@ -93,12 +98,14 @@ public class TaskController {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
         //var checkObject = taskUpdateDTO.getAssigneeId();
-        if (taskUpdateDTO.getAssigneeId() != null) {
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeId())) {
+        //if (taskUpdateDTO.getAssigneeId() != null) {
             var idFind = taskUpdateDTO.getAssigneeId().get();
             var userNew = userRepository.findById(Long.valueOf(idFind)).get();
             task.setAssignee(userNew);
         }
-        if (taskUpdateDTO.getStatus() != null) {
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
+        //if (taskUpdateDTO.getStatus() != null) {
             var stsusFind = taskUpdateDTO.getStatus().get();
             var statusNew = taskStatusRepository.findBySlug(stsusFind).get();
             task.setTaskStatus(statusNew);

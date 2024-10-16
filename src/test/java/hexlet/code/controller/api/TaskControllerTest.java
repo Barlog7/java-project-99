@@ -212,5 +212,28 @@ class TaskControllerTest {
         var taskTest = taskRepository.findById(taskFind.getId()).get();
         assertThat(taskTest.getName()).isEqualTo(("test task update change"));
 
+        User userNew = generateUser("someupdateNew@mail.com", "12347");
+        var dataUser = new HashMap<>();
+        dataUser.put("assigneeId", Long.valueOf(userNew.getId()));
+        //data.put("title", "test task update change");
+        var taskFindUpdateUser = taskRepository.findByName("test task update change").get();
+        var request2 = MockMvcRequestBuilders.put("/api/tasks/" + taskFind.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(dataUser));
+
+        mockMvc.perform(request2)
+                .andExpect(status().isOk());
+        taskTest = taskRepository.findById(taskFind.getId()).get();
+        var userFind  = userRepository.findByEmail("someupdateNew@mail.com").get();
+
+        var userFindOld  = userRepository.findByEmail("someupdate@mail.com").get();
+        System.out.println("Test");
+        assertThat(taskTest.getAssignee().getEmail()).isEqualTo("someupdateNew@mail.com");
+        var task = userFind.getTasks().get(0);
+        assertThat(task).isEqualTo(taskTest);
+        //assertThat(tasks.contains(taskTest)).isTrue();
+        assertThat(userFindOld.getTasks().contains(taskTest)).isFalse();
+
     }
 }
