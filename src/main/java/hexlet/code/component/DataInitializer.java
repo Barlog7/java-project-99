@@ -1,7 +1,9 @@
 package hexlet.code.component;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
@@ -19,6 +21,8 @@ public class DataInitializer implements ApplicationRunner {
     private UserRepository userRepository;
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -64,5 +68,15 @@ public class DataInitializer implements ApplicationRunner {
         taskData.setName(name);
         taskData.setSlug(slag);
         taskStatusRepository.save(taskData);
+
+        var label = new Label();
+        var nameLabel = "feature";
+        label.setName(nameLabel);
+        labelRepository.save(label);
+
+        label = new Label();
+        nameLabel = "bug";
+        label.setName(nameLabel);
+        labelRepository.save(label);
     }
 }
