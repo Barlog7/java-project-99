@@ -70,7 +70,7 @@ class LabelControllerTest {
                 .andExpect(status().isOk()).andReturn().getResponse();
         var body = result.getContentAsString();
         assertThatJson(body).and(
-                v -> v.node("feature").isEqualTo(savedFind.getName()));
+                v -> v.node("name").isEqualTo(savedFind.getName()));
     }
 
     @Test

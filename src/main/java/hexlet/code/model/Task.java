@@ -47,9 +47,9 @@ public class Task implements BaseEntity {
     @CreatedDate
     private Instant createdAt;
     @ManyToMany
-    @JoinTable(name = "tasks_labels",
-            joinColumns = @JoinColumn(name = "tasks_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "labels_id",
-                    referencedColumnName = "id"))
-    private Set<Label> labels = new LinkedHashSet<>();
+    @JoinTable(
+            name = "tasks_labels",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "label_id"))
+    private Set<Label> labelsUsed = new LinkedHashSet<>();
 }

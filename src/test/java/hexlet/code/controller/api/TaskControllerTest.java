@@ -8,6 +8,7 @@ import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -55,6 +56,9 @@ class TaskControllerTest {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 

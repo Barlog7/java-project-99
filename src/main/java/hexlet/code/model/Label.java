@@ -35,7 +35,8 @@ public class Label implements BaseEntity  {
     private String name;
     @CreatedDate
     private Instant createdAt;
-    @ManyToMany(mappedBy = "labels")
+    //@ManyToMany(mappedBy = "labels")
+    @ManyToMany(mappedBy = "labelsUsed")
     private Set<Task> tasks;
 
 }
