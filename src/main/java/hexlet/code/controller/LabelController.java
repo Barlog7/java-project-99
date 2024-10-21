@@ -57,7 +57,10 @@ public class LabelController {
         //var status = taskRepository.findById(id).get().getTaskStatus();
         //user.removeTask(task);
         //status.removeTask(task);
-        labelRepository.deleteById(id);
+        if (labelRepository.findById(id).get().getTasks().isEmpty()) {
+            labelRepository.deleteById(id);
+        }
+        //labelRepository.deleteById(id);
     }
 
     @PostMapping(path = "")
