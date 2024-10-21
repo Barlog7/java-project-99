@@ -99,7 +99,8 @@ class TaskControllerTest {
         .supply(Select.field(Task::getDescription), () -> desc)
         .supply(Select.field(Task::getAssignee), () -> user)
         .supply(Select.field(Task::getTaskStatus), () -> tasks)
-        .ignore(Select.field(TaskStatus::getCreatedAt))
+        .ignore(Select.field(Task::getCreatedAt))
+                .ignore(Select.field(Task::getLabelsUsed))
         .create();
     }
 
