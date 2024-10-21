@@ -6,6 +6,9 @@ logging:
       springframework:
         security: trace
 
+springdoc:
+  api-docs:
+    path: /api-docs
 spring:
   jpa:
     generate-ddl: true
