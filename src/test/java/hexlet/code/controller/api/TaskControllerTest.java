@@ -135,6 +135,29 @@ class TaskControllerTest {
     }
 
     @Test
+    void indexWithSerchName() throws Exception {
+        User userSearch = generateUser("someSerch@mail.com", "1234");
+        TaskStatus taskSSearch = generateTaskStatus("task status test search", "task_status_test_search");
+        Task taskTestSearch = generateTask("search", "test task description search", userSearch, taskSSearch);
+        taskRepository.save(taskTestSearch);
+        if (taskRepository.findByName("test task").isEmpty()) {
+            User user = generateUser("some@mail.com", "1234");
+            TaskStatus taskS = generateTaskStatus("task status test", "task_status_test");
+            Task taskTest = generateTask("test task", "test task description", user, taskS);
+            taskRepository.save(taskTest);
+        }
+
+        var count = taskRepository.count();
+        var result = mockMvc.perform(get("/api/tasks?titleCont=search").with(jwt()))
+                .andExpect(status().isOk()).andReturn().getResponse();
+        var body = result.getContentAsString();
+        assertThatJson(body).isArray();
+        List<TaskDTO> taskDTOs = om.readValue(body, new TypeReference<List<TaskDTO>>() { });
+        assertThat(taskDTOs.size()).isEqualTo((1));
+    }
+
+
+    @Test
     void show() throws Exception {
         if (taskRepository.findByName("test task").isEmpty()) {
             User user = generateUser("someShow@mail.com", "1234");

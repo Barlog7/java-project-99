@@ -2,6 +2,7 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.dto.TaskCreateDTO;
+import hexlet.code.dto.TaskParamDTO;
 import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.JsonNullableMapper;
@@ -10,6 +11,7 @@ import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.specification.TaskSpecification;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +47,14 @@ public class TaskController {
     @Autowired
     private JsonNullableMapper jsonNullableMapper;
 
+    @Autowired
+    private TaskSpecification taskSpecification;
+
     @GetMapping("")
-    public ResponseEntity<List<TaskDTO>> index() {
-        var tasks = taskRepository.findAll();
+    public ResponseEntity<List<TaskDTO>> index(TaskParamDTO param) {
+        var spec = taskSpecification.build(param);
+        //var tasks = taskRepository.findAll();
+        var tasks = taskRepository.findAll(spec);
         var taskDTO = tasks.stream()
                 .map(taskMapper::mapTask)
                 .toList();
