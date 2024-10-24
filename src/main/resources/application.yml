@@ -6,6 +6,9 @@ logging:
       springframework:
         security: trace
 
+sentry:
+  dsn: https://4134972a1845e5ee2f0cb1f116324b16@o4508176732061696.ingest.de.sentry.io/4508176775577680
+
 springdoc:
   api-docs:
     path: /api-docs
