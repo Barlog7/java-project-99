@@ -1,16 +1,8 @@
 spring:
-  jpa:
-    properties:
-      hibernate:
-        boot:
-          allow_jdbc_metadata_access: false
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-    sql:
-      init:
-        mode: never
   datasource:
-    password: fSOm1clIpxWiuHbL8QS3XHCnmOYiMQQo
-    url: jdbc:postgresql://dpg-csd4m13v2p9s73fsfd80-a:5432/database99_bhrr
-    username: user99
+    username: ${JDBC_DATABASE_USERNAME:user99}
+    password: ${JDBC_DATABASE_PASSWORD:fSOm1clIpxWiuHbL8QS3XHCnmOYiMQQo}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
