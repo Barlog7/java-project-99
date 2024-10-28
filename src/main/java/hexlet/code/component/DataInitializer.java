@@ -26,6 +26,10 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        User defaultUser = userRepository.findByEmail("hexlet@example.com").orElse(null);
+        if (defaultUser != null) {
+            return;
+        }
         var email = "hexlet@example.com";
         var userData = new User();
         userData.setEmail(email);
