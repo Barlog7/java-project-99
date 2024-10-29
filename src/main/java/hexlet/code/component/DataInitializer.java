@@ -28,10 +28,7 @@ public class DataInitializer implements ApplicationRunner {
     private TaskRepository taskRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        taskRepository.deleteAll();
-        userRepository.deleteAll();
-        taskStatusRepository.deleteAll();
-        labelRepository.deleteAll();
+
         User defaultUser = userRepository.findByEmail("hexlet@example.com").orElse(null);
         if (defaultUser != null) {
             return;
