@@ -4,6 +4,7 @@ import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
@@ -23,9 +24,14 @@ public class DataInitializer implements ApplicationRunner {
     private TaskStatusRepository taskStatusRepository;
     @Autowired
     private LabelRepository labelRepository;
-
+    @Autowired
+    private TaskRepository taskRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        taskRepository.deleteAll();
+        userRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
         User defaultUser = userRepository.findByEmail("hexlet@example.com").orElse(null);
         if (defaultUser != null) {
             return;
