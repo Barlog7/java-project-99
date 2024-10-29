@@ -90,7 +90,9 @@ class UserControllerTest {
         //var userFind = generateUser("aaaa@google.com");
         //var savedUser = userRepository.save(user);
         //var passHash = PasswordHashing.getHashPass(userFind.getPassword());
-
+        if (userRepository.findByEmail("aaaa@google.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("aaaa@google.com").get());
+        }
         var userFind = generateUserDTO("aaaa@google.com");
         var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
@@ -104,6 +106,7 @@ class UserControllerTest {
         var userTest = userRepository.findByEmail(userFind.getEmail()).get();
 
         assertNotNull(userTest);
+        userRepository.delete(userTest);
 
 
     }

@@ -15,6 +15,7 @@ import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
 import org.instancio.Select;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,9 +137,26 @@ class TaskControllerTest {
 
     @Test
     void indexWithSerchName() throws Exception {
+
+
+        if (taskStatusRepository.findBySlug("task_status_test_search").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_search").get();
+            testStatus.removeTask(taskRepository.findByName("search").get());
+            taskStatusRepository.save(testStatus);
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_search").get());
+        }
+        if (taskRepository.findByName("search").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("search").get());
+        }
+        if (userRepository.findByEmail("someSerch@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someSerch@mail.com").get());
+        }
+
+
         User userSearch = generateUser("someSerch@mail.com", "1234");
         TaskStatus taskSSearch = generateTaskStatus("task status test search", "task_status_test_search");
         Task taskTestSearch = generateTask("search", "test task description search", userSearch, taskSSearch);
+
         taskRepository.save(taskTestSearch);
         if (taskRepository.findByName("test task").isEmpty()) {
             User user = generateUser("some@mail.com", "1234");
@@ -154,12 +172,39 @@ class TaskControllerTest {
         assertThatJson(body).isArray();
         List<TaskDTO> taskDTOs = om.readValue(body, new TypeReference<List<TaskDTO>>() { });
         assertThat(taskDTOs.size()).isEqualTo((1));
+
+        if (taskStatusRepository.findBySlug("task_status_test_search").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_search").get();
+            testStatus.removeTask(taskRepository.findByName("search").get());
+            taskStatusRepository.save(testStatus);
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_search").get());
+        }
+        if (taskRepository.findByName("search").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("search").get());
+        }
+        if (userRepository.findByEmail("someSerch@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someSerch@mail.com").get());
+        }
+
     }
 
 
     @Test
     void show() throws Exception {
-        if (taskRepository.findByName("test task").isEmpty()) {
+        if (taskStatusRepository.findBySlug("task_status_test_show").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_show").get();
+            testStatus.removeTask(taskRepository.findByName("test task show").get());
+            taskStatusRepository.save(testStatus);
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_show").get());
+        }
+        if (taskRepository.findByName("test task show").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task show").get());
+        }
+        if (userRepository.findByEmail("someShow@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someShow@mail.com").get());
+        }
+
+        if (taskRepository.findByName("test task show").isEmpty()) {
             User user = generateUser("someShow@mail.com", "1234");
             TaskStatus taskS = generateTaskStatus("task status test show", "task_status_test_show");
             Task taskTest = generateTask("test task show", "test task description show", user, taskS);
@@ -167,7 +212,7 @@ class TaskControllerTest {
         }
         //Task taskTestShow = generateTask("test status show", "test_status_show", user, taskS);
         //taskRepository.save(taskTestShow);
-        var savedFind = taskRepository.findById(1L).get();
+        var savedFind = taskRepository.findByName("test task show").get();
         ///var id = taskTest.getId();
         var result = mockMvc.perform(get("/api/tasks/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
@@ -178,6 +223,24 @@ class TaskControllerTest {
 
     @Test
     void delete() throws Exception {
+        //User user = generateUser("someDelete@mail.com", "1234d");
+        //TaskStatus taskS = generateTaskStatus("task status test delete", "task_status_test_delete");
+        //Task taskTest = generateTask("test task delete", "test task description delete", user, taskS);
+        if (taskStatusRepository.findBySlug("task_status_test_delete").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_delete").get();
+            if (taskRepository.findByName("test task delete").isPresent()
+                && testStatus.getTasks().contains(taskRepository.findByName("test task delete").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task delete").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_delete").get());
+        }
+        if (taskRepository.findByName("test task delete").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task delete").get());
+        }
+        if (userRepository.findByEmail("someDelete@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someDelete@mail.com").get());
+        }
         User user = generateUser("someDelete@mail.com", "1234d");
         TaskStatus taskS = generateTaskStatus("task status test delete", "task_status_test_delete");
         Task taskTest = generateTask("test task delete", "test task description delete", user, taskS);
@@ -190,10 +253,42 @@ class TaskControllerTest {
         var tasksFindFromUser = userFind.getTasks();
         var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_delete").get();
         var tasksFindFromTaskStatus = taskStatusFind.getTasks();
+
+        if (taskStatusRepository.findBySlug("task_status_test_delete").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_delete").get();
+            if (taskRepository.findByName("test task delete").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task delete").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task delete").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_delete").get());
+        }
+        if (taskRepository.findByName("test task delete").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task delete").get());
+        }
+        if (userRepository.findByEmail("someDelete@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someDelete@mail.com").get());
+        }
     }
 
     @Test
     void create() throws Exception {
+        if (taskStatusRepository.findBySlug("task_status_test_create").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_create").get();
+            if (taskRepository.findByName("test task create").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task create").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task create").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_create").get());
+        }
+        if (taskRepository.findByName("test task create").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task create").get());
+        }
+        if (userRepository.findByEmail("somenew@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("somenew@mail.com").get());
+        }
+
         User user = generateUser("somenew@mail.com", "12345");
         TaskStatus taskS = generateTaskStatus("task status test create", "task_status_test_create");
         Task taskTest = generateTask("test task create", "test task description create", user, taskS);
@@ -219,10 +314,54 @@ class TaskControllerTest {
         var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_create").get();
         var tasksFindFromTaskStatus = taskStatusFind.getTasks();
         System.out.println("Test");
+
+        if (taskStatusRepository.findBySlug("task_status_test_create").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_create").get();
+            if (taskRepository.findByName("test task create").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task create").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task create").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_create").get());
+        }
+        if (taskRepository.findByName("test task create").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task create").get());
+        }
+        if (userRepository.findByEmail("somenew@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("somenew@mail.com").get());
+        }
     }
 
     @Test
     void update() throws Exception {
+        if (taskStatusRepository.findBySlug("task_status_test_update").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_update").get();
+            if (taskRepository.findByName("test task update change").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task update change").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task update change").get());
+                taskStatusRepository.save(testStatus);
+            }
+            if (taskRepository.findByName("test task update").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task update").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task update").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_update").get());
+        }
+        if (taskRepository.findByName("test task update change").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task update change").get());
+        }
+        if (taskRepository.findByName("test task update").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task update").get());
+        }
+        if (userRepository.findByEmail("someupdate@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someupdate@mail.com").get());
+        }
+        if (userRepository.findByEmail("someupdateNew@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someupdateNew@mail.com").get());
+        }
+
+
         User user = generateUser("someupdate@mail.com", "1234");
         TaskStatus taskS = generateTaskStatus("task status test update", "task_status_test_update");
         Task taskTestSave = generateTask("test task update", "test task description update", user, taskS);
@@ -263,5 +402,33 @@ class TaskControllerTest {
         //assertThat(tasks.contains(taskTest)).isTrue();
         assertThat(userFindOld.getTasks().contains(taskTest)).isFalse();
 
+        if (taskStatusRepository.findBySlug("task_status_test_update").isPresent()) {
+            var testStatus  = taskStatusRepository.findBySlug("task_status_test_update").get();
+            if (taskRepository.findByName("test task update change").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task update change").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task update change").get());
+                taskStatusRepository.save(testStatus);
+            }
+            if (taskRepository.findByName("test task update").isPresent()
+                    && testStatus.getTasks().contains(taskRepository.findByName("test task update").get())) {
+                testStatus.removeTask(taskRepository.findByName("test task update").get());
+                taskStatusRepository.save(testStatus);
+            }
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("task_status_test_update").get());
+        }
+        if (taskRepository.findByName("test task update change").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task update change").get());
+        }
+        if (taskRepository.findByName("test task update").isPresent()) {
+            taskRepository.delete(taskRepository.findByName("test task update").get());
+        }
+        if (userRepository.findByEmail("someupdate@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someupdate@mail.com").get());
+        }
+        if (userRepository.findByEmail("someupdateNew@mail.com").isPresent()) {
+            userRepository.delete(userRepository.findByEmail("someupdateNew@mail.com").get());
+        }
+
     }
+
 }

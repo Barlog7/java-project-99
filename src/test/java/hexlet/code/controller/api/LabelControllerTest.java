@@ -90,6 +90,9 @@ class LabelControllerTest {
 
     @Test
     void create() throws Exception {
+        if (labelRepository.findByName("create_label").isPresent()) {
+            labelRepository.delete(labelRepository.findByName("create_label").get());
+        }
         LabelCreateDTO dto = new LabelCreateDTO();
         dto.setName("create_label");
         var request = MockMvcRequestBuilders.post("/api/labels")
@@ -101,15 +104,26 @@ class LabelControllerTest {
         var labelTest = labelRepository.findByName("create_label").get();
 
         assertNotNull(labelTest);
+        labelRepository.delete(labelTest);
     }
 
     @Test
     void update() throws Exception {
+
         //LabelUpdateDTO dto = new LabelUpdateDTO();
         //dto.setName("bug_update");
+        if (labelRepository.findByName("bug test").isPresent()) {
+            labelRepository.delete(labelRepository.findByName("bug test").get());
+        }
+        if (labelRepository.findByName("bug_update").isPresent()) {
+            labelRepository.delete(labelRepository.findByName("bug_update").get());
+        }
+        Label labelNew = new Label();
+        labelNew.setName("bug test");
+        labelRepository.save(labelNew);
         var data = new HashMap<>();
         data.put("name", "bug_update");
-        var labelFind = labelRepository.findByName("bug").get();
+        var labelFind = labelRepository.findByName("bug test").get();
         var request = MockMvcRequestBuilders.put("/api/labels/" + labelFind.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,5 +133,12 @@ class LabelControllerTest {
                 .andExpect(status().isOk());
         var labelTest = labelRepository.findById(labelFind.getId()).get();
         assertThat(labelTest.getName()).isEqualTo(("bug_update"));
+
+        if (labelRepository.findByName("bug_update").isPresent()) {
+            labelRepository.delete(labelRepository.findByName("bug_update").get());
+        }
+        if (labelRepository.findByName("bug test").isPresent()) {
+            labelRepository.delete(labelRepository.findByName("bug test").get());
+        }
     }
 }

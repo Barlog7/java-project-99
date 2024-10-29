@@ -64,6 +64,7 @@ class TaskStatusControllerTest {
                 .supply(Select.field(TaskStatus::getName), () -> name)
                 .supply(Select.field(TaskStatus::getSlug), () -> slug)
                 .ignore(Select.field(TaskStatus::getCreatedAt))
+                .ignore(Select.field(TaskStatus::getTasks))
                 .create();
     }
 
@@ -103,6 +104,9 @@ class TaskStatusControllerTest {
     @Test
     void create() throws Exception {
         //taskStatusRepository.save(taskTest);
+        if (taskStatusRepository.findBySlug("test_status1").isPresent()) {
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status1").get());
+        }
         var taskTestStatusCreate = generateTaskStatusCreateDTO("test status1", "test_status1");
         var request = MockMvcRequestBuilders.post("/api/task_statuses")
                 .with(token)
@@ -113,6 +117,7 @@ class TaskStatusControllerTest {
         var userTest = taskStatusRepository.findBySlug("test_status1").get();
 
         assertNotNull(userTest);
+        taskStatusRepository.delete(userTest);
     }
 
     @Test
@@ -136,7 +141,9 @@ class TaskStatusControllerTest {
 
     @Test
     void delete() throws Exception {
-        var taskFind = taskStatusRepository.findBySlug("published").get();
+        var taskTestDel = generateTaskStatus("test status delete", "test_status_delete");
+        taskStatusRepository.save(taskTestDel);
+        var taskFind = taskStatusRepository.findBySlug("test_status_delete").get();
         var request = mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/task_statuses/{id}", taskFind.getId()).with(jwt()))
                 .andExpect(status()
