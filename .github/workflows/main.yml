@@ -25,6 +25,13 @@ jobs:
         env:
            CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
            JACOCO_SOURCE_PATH: src/main/java
+           DATABASE: ${{secrets.DATABASE}}
+           DB_PORT: ${{secrets.DB_PORT}}
+           HOST: ${{secrets.HOST}}
+           USERNAME: ${{secrets.USERNAME}}
+           PASSWORD: ${{secrets.PASSWORD}}
+           SPRING_PROFILES_ACTIVE: ${{secrets.SPRING_PROFILES_ACTIVE}}
+           JDBC_DATABASE_URL: ${{secrets.JDBC_DATABASE_URL}}
         with:
            coverageCommand: make report
            coverageLocations: ${{github.workspace}}/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
