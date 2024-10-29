@@ -1,4 +1,3 @@
-/*
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,7 +65,6 @@ class LabelControllerTest {
     @Test
     void show() throws Exception {
         var savedFind = labelRepository.findByName("feature").get();
-        ///var id = taskTest.getId();
         var result = mockMvc.perform(get("/api/labels/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
         var body = result.getContentAsString();
@@ -83,12 +81,6 @@ class LabelControllerTest {
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/labels/{id}", labelFind.getId()).with(jwt()))
                 .andExpect(status()
                         .isNoContent());
-        */
-/*var userFind  = userRepository.findByEmail("someDelete@mail.com").get();
-        var tasksFindFromUser = userFind.getTasks();
-        var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_delete").get();
-        var tasksFindFromTaskStatus = taskStatusFind.getTasks();*//*
-
     }
 
     @Test
@@ -113,8 +105,6 @@ class LabelControllerTest {
     @Test
     void update() throws Exception {
 
-        //LabelUpdateDTO dto = new LabelUpdateDTO();
-        //dto.setName("bug_update");
         if (labelRepository.findByName("bug test").isPresent()) {
             labelRepository.delete(labelRepository.findByName("bug test").get());
         }
@@ -145,4 +135,3 @@ class LabelControllerTest {
         }
     }
 }
-*/

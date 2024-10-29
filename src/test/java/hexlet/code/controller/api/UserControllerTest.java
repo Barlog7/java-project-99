@@ -1,4 +1,4 @@
-/*package hexlet.code.controller.api;
+package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.dto.UserCreateDTO;
@@ -86,10 +86,7 @@ class UserControllerTest {
 
     @Test
     void create() throws Exception {
-        //var data = generateUser();
-        //var userFind = generateUser("aaaa@google.com");
-        //var savedUser = userRepository.save(user);
-        //var passHash = PasswordHashing.getHashPass(userFind.getPassword());
+
         if (userRepository.findByEmail("aaaa@google.com").isPresent()) {
             userRepository.delete(userRepository.findByEmail("aaaa@google.com").get());
         }
@@ -113,9 +110,9 @@ class UserControllerTest {
 
     @Test
     void checkValidate() throws Exception {
-        //var data = generateUser();
+
         var userFind = generateUser("aaaa");
-        //var savedUser = userRepository.save(user);
+
         var passHash = PasswordHashing.getHashPass(userFind.getPassword());
 
         var request = MockMvcRequestBuilders.post("/api/users")
@@ -125,9 +122,6 @@ class UserControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest());
-        //var userTest = userRepository.findByEmail(userFind.getEmail()).get();
-
-        //assertNotNull(userTest);
 
 
     }
@@ -136,8 +130,7 @@ class UserControllerTest {
 
     @Test
     void show() throws Exception {
-        //var user = generateUser();
-        //var savedUser = userRepository.save(user);
+
         var savedFind = userRepository.findByEmail("john@google.com").get();
         var id = savedFind.getId();
         var result = mockMvc.perform(get("/api/users/" + savedFind.getId()).with(jwt()))
@@ -152,14 +145,10 @@ class UserControllerTest {
 
     @Test
     void update() throws Exception {
-        //var user = generateUser();
-        //var savedUser = userRepository.save(user);
-        *//*var userCur = userRepository.findByEmail("john@google.com").get();*//*
+
         var data = new HashMap<>();
         data.put("firstName", "Mike");
-*//*        var updateUser = new UserUpdateDTO();
-        JsonNullable<String> nullableParam;
-        updateUser.setFirstName("Mike");*//*
+
 
         var request = MockMvcRequestBuilders.put("/api/users/" + savedUser.getId())
                 .with(token)
@@ -175,18 +164,13 @@ class UserControllerTest {
 
     @Test
     void index() throws Exception {
-        //var user = generateUser();
-        //var passHash = PasswordHashing.getHashPass(user.getPassword());
-        //user.setPassword(passHash);
 
-        //var savedUser = userRepository.save(user);
         var result = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
 
         var body = result.getContentAsString();
         assertThatJson(body).isArray();
-        *//*List<UserDTO> userDTOS = om.readValue(body,
-                new TypeReference<List<UserDTO>>(){});*//*
+
         List<UserDTO> userDTOS = om.readValue(body, new TypeReference<List<UserDTO>>() { });
 
         var actual = userDTOS.stream()
@@ -194,20 +178,19 @@ class UserControllerTest {
                 .toList();
 
         var expected = userRepository.findAll();
-        //var userDTOExp = expected.stream().map(userMapper::mapModel).toList();
+
 
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
-        //assertThat(userDTOS).containsExactlyInAnyOrderElementsOf(userDTOExp);
+
     }
 
     @Test
     void delete() throws Exception {
         var userCur = userRepository.findByEmail("john@google.com").get();
-        *//*var user = generateUser();
-        var savedUser = userRepository.save(user);*//*
+
 
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(jwt()))
                 .andExpect(status()
                 .isNoContent());
     }
-}*/
+}

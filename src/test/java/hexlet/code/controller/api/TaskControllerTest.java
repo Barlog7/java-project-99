@@ -1,4 +1,3 @@
-/*
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -64,12 +63,6 @@ class TaskControllerTest {
 
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
-    //private Task taskTest;
-*/
-/*    private User user;
-    private TaskStatus taskS;*//*
-
-
     private User generateUser(String email, String password) {
         User user = Instancio.of(User.class)
                 .ignore(Select.field(User::getId))
@@ -111,16 +104,6 @@ class TaskControllerTest {
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-*/
-/*        if (taskRepository.findByName("test task").isEmpty()) {
-            User user = generateUser("some@mail.com", "1234");
-            TaskStatus taskS = generateTaskStatus("task status test", "task_status_test");
-            Task taskTest = generateTask("test task", "test task description", user, taskS);
-            taskRepository.save(taskTest);
-        }*//*
-
-        //taskRepository.save(taskTest);
-
     }
 
     @Test
@@ -215,8 +198,6 @@ class TaskControllerTest {
             Task taskTest = generateTask("test task show", "test task description show", user, taskS);
             taskRepository.save(taskTest);
         }
-        //Task taskTestShow = generateTask("test status show", "test_status_show", user, taskS);
-        //taskRepository.save(taskTestShow);
         var savedFind = taskRepository.findByName("test task show").get();
         ///var id = taskTest.getId();
         var result = mockMvc.perform(get("/api/tasks/" + savedFind.getId()).with(jwt()))
@@ -228,9 +209,7 @@ class TaskControllerTest {
 
     @Test
     void delete() throws Exception {
-        //User user = generateUser("someDelete@mail.com", "1234d");
-        //TaskStatus taskS = generateTaskStatus("task status test delete", "task_status_test_delete");
-        //Task taskTest = generateTask("test task delete", "test task description delete", user, taskS);
+
         if (taskStatusRepository.findBySlug("task_status_test_delete").isPresent()) {
             var testStatus  = taskStatusRepository.findBySlug("task_status_test_delete").get();
             if (taskRepository.findByName("test task delete").isPresent()
@@ -387,7 +366,6 @@ class TaskControllerTest {
         User userNew = generateUser("someupdateNew@mail.com", "12347");
         var dataUser = new HashMap<>();
         dataUser.put("assigneeId", Long.valueOf(userNew.getId()));
-        //data.put("title", "test task update change");
         var taskFindUpdateUser = taskRepository.findByName("test task update change").get();
         var request2 = MockMvcRequestBuilders.put("/api/tasks/" + taskFind.getId())
                 .with(token)
@@ -404,7 +382,6 @@ class TaskControllerTest {
         assertThat(taskTest.getAssignee().getEmail()).isEqualTo("someupdateNew@mail.com");
         var task = userFind.getTasks().get(0);
         assertThat(task).isEqualTo(taskTest);
-        //assertThat(tasks.contains(taskTest)).isTrue();
         assertThat(userFindOld.getTasks().contains(taskTest)).isFalse();
 
         if (taskStatusRepository.findBySlug("task_status_test_update").isPresent()) {
@@ -437,4 +414,3 @@ class TaskControllerTest {
     }
 
 }
-*/

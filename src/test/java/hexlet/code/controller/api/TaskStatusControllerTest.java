@@ -1,4 +1,3 @@
-/*
 package hexlet.code.controller.api;
 
 
@@ -92,7 +91,14 @@ class TaskStatusControllerTest {
 
     @Test
     void show() throws Exception {
-        var savedFind = taskStatusRepository.findBySlug("draft").get();
+        if (taskStatusRepository.findBySlug("test_status_show").isPresent()) {
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status_show").get());
+        }
+        var taskTestShow = generateTaskStatus("test status show", "test_status_show");
+        taskStatusRepository.save(taskTestShow);
+        var savedFind = taskStatusRepository.findBySlug("test_status_show").get();
+
+        //var savedFind = taskStatusRepository.findBySlug("draft").get();
         var id = savedFind.getId();
         var result = mockMvc.perform(get("/api/task_statuses/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
@@ -100,14 +106,20 @@ class TaskStatusControllerTest {
         assertThatJson(body).and(
                 v -> v.node("name").isEqualTo(savedFind.getName()));
 
+        if (taskStatusRepository.findBySlug("test_status_show").isPresent()) {
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status_show").get());
+        }
+
     }
 
     @Test
     void create() throws Exception {
-        //taskStatusRepository.save(taskTest);
+
         if (taskStatusRepository.findBySlug("test_status1").isPresent()) {
             taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status1").get());
         }
+
+
         var taskTestStatusCreate = generateTaskStatusCreateDTO("test status1", "test_status1");
         var request = MockMvcRequestBuilders.post("/api/task_statuses")
                 .with(token)
@@ -125,9 +137,16 @@ class TaskStatusControllerTest {
     void update() throws Exception {
         var data = new HashMap<>();
         data.put("name", "Draft test");
-        var taskFind = taskStatusRepository.findBySlug("draft").get();
 
-        var request = MockMvcRequestBuilders.put("/api/task_statuses/" + taskFind.getId())
+
+        if (taskStatusRepository.findBySlug("test_status_update").isPresent()) {
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status_update").get());
+        }
+        var taskTestShow = generateTaskStatus("test status update", "test_status_update");
+        taskStatusRepository.save(taskTestShow);
+        var savedFind = taskStatusRepository.findBySlug("test_status_update").get();
+
+        var request = MockMvcRequestBuilders.put("/api/task_statuses/" + savedFind.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
@@ -135,9 +154,13 @@ class TaskStatusControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var userTest = taskStatusRepository.findById(taskFind.getId()).get();
+        var userTest = taskStatusRepository.findById(savedFind.getId()).get();
         assertThat(userTest.getName()).isEqualTo(("Draft test"));
-        assertThat(userTest.getSlug()).isEqualTo(("draft"));
+        assertThat(userTest.getSlug()).isEqualTo(("test_status_update"));
+
+        if (taskStatusRepository.findBySlug("test_status_update").isPresent()) {
+            taskStatusRepository.delete(taskStatusRepository.findBySlug("test_status_update").get());
+        }
     }
 
     @Test
@@ -156,4 +179,3 @@ class TaskStatusControllerTest {
 
 
 }
-*/
