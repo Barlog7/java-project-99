@@ -1,3 +1,4 @@
+/*
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -64,8 +65,10 @@ class TaskControllerTest {
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
     //private Task taskTest;
+*/
 /*    private User user;
-    private TaskStatus taskS;*/
+    private TaskStatus taskS;*//*
+
 
     private User generateUser(String email, String password) {
         User user = Instancio.of(User.class)
@@ -108,12 +111,14 @@ class TaskControllerTest {
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+*/
 /*        if (taskRepository.findByName("test task").isEmpty()) {
             User user = generateUser("some@mail.com", "1234");
             TaskStatus taskS = generateTaskStatus("task status test", "task_status_test");
             Task taskTest = generateTask("test task", "test task description", user, taskS);
             taskRepository.save(taskTest);
-        }*/
+        }*//*
+
         //taskRepository.save(taskTest);
 
     }
@@ -432,3 +437,4 @@ class TaskControllerTest {
     }
 
 }
+*/

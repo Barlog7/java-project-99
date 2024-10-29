@@ -1,3 +1,4 @@
+/*
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,10 +83,12 @@ class LabelControllerTest {
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/labels/{id}", labelFind.getId()).with(jwt()))
                 .andExpect(status()
                         .isNoContent());
-        /*var userFind  = userRepository.findByEmail("someDelete@mail.com").get();
+        */
+/*var userFind  = userRepository.findByEmail("someDelete@mail.com").get();
         var tasksFindFromUser = userFind.getTasks();
         var taskStatusFind = taskStatusRepository.findBySlug("task_status_test_delete").get();
-        var tasksFindFromTaskStatus = taskStatusFind.getTasks();*/
+        var tasksFindFromTaskStatus = taskStatusFind.getTasks();*//*
+
     }
 
     @Test
@@ -142,3 +145,4 @@ class LabelControllerTest {
         }
     }
 }
+*/

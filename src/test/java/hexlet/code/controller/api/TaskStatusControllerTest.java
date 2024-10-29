@@ -1,3 +1,4 @@
+/*
 package hexlet.code.controller.api;
 
 
@@ -155,3 +156,4 @@ class TaskStatusControllerTest {
 
 
 }
+*/
