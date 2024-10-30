@@ -22,7 +22,7 @@ spring:
     ansi:
       enabled: always
   profiles:
-    default: production
+    default: development
   application:
     name: app
 
