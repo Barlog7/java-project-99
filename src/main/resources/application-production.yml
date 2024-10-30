@@ -7,4 +7,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    database: org.hibernate.dialect.PostgreSQLDialect
