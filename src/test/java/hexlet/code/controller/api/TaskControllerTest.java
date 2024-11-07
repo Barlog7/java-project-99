@@ -376,8 +376,8 @@ class TaskControllerTest {
         mockMvc.perform(request2)
                 .andExpect(status().isOk());
         taskTest = taskRepository.findById(taskFindUpdateUser.getId()).get();
-        var userFind  = userRepository.findByEmail("someupdateNew@mail.com").get();
 
+        var userFind  = userRepository.findByEmail("someupdateNew@mail.com").get();
         var userFindOld  = userRepository.findByEmail("someupdate@mail.com").get();
         System.out.println("Test");
         assertThat(taskTest.getAssignee().getEmail()).isEqualTo("someupdateNew@mail.com");
