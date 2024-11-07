@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Set;
 
 
 @Getter
@@ -12,8 +13,9 @@ public class TaskDTO {
     private Long id;
     private Integer index;
     private Instant createdAt;
-    private Integer assigneeId;
+    private Integer assignee_id;
     private String title;
     private String content;
     private String status;
+    private Set<Long> taskLabelIds;
 }

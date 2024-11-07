@@ -7,7 +7,9 @@ import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.TaskMapper;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -40,6 +43,8 @@ public class TaskController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
@@ -88,6 +93,7 @@ public class TaskController {
     public TaskDTO create(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
         var task = taskMapper.map(taskCreateDTO);
         updateInTaskStatus(task);
+        createLabels(task, taskCreateDTO);
         taskRepository.save(task);
         var taskDTO = taskMapper.mapTask(task);
         return taskDTO;
@@ -98,6 +104,23 @@ public class TaskController {
         task.setTaskStatus(taskStatusGet);
         taskStatusGet.addTask(task);
     }
+    private void createLabels(Task task, TaskCreateDTO taskCreateDTO) {
+        List<Label> labels = null;
+        if (taskCreateDTO.getTaskLabelIds() != null) {
+            labels = labelRepository.findAllById(taskCreateDTO.getTaskLabelIds());
+        }
+        task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
+
+    }
+
+    private void updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
+        List<Label> labels = null;
+        if (taskUpdateDTO.getTaskLabelIds().get() != null) {
+            labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
+        }
+        task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
+
+    }
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -105,9 +128,9 @@ public class TaskController {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
         //var checkObject = taskUpdateDTO.getAssigneeId();
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeId())) {
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssignee_id())) {
         //if (taskUpdateDTO.getAssigneeId() != null) {
-            var idFind = taskUpdateDTO.getAssigneeId().get();
+            var idFind = taskUpdateDTO.getAssignee_id().get();
             var userNew = userRepository.findById(Long.valueOf(idFind)).get();
             task.setAssignee(userNew);
         }
@@ -116,6 +139,9 @@ public class TaskController {
             var stsusFind = taskUpdateDTO.getStatus().get();
             var statusNew = taskStatusRepository.findBySlug(stsusFind).get();
             task.setTaskStatus(statusNew);
+        }
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
+            updateLabels(task, taskUpdateDTO);
         }
         taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);

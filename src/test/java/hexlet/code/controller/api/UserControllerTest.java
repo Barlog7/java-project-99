@@ -17,16 +17,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +54,11 @@ class UserControllerTest {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private WebApplicationContext wac;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     private User generateUser(String email) {
         return Instancio.of(User.class)
@@ -76,6 +88,15 @@ class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
+/*        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(springSecurity())
+                .build();*/
+/*        var authentication = new UsernamePasswordAuthenticationToken(
+                "hexlet@example.com", "qwerty");
+
+        authenticationManager.authenticate(authentication);*/
+
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         user = generateUser("john@google.com");
         if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
@@ -146,6 +167,11 @@ class UserControllerTest {
     @Test
     void update() throws Exception {
 
+        user = generateUser("johnUpdatee@google.com");
+        if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            savedUser = userRepository.save(user);
+            var passHash = PasswordHashing.getHashPass(user.getPassword());
+        }
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
@@ -160,6 +186,7 @@ class UserControllerTest {
 
         var userTest = userRepository.findById(savedUser.getId()).get();
         assertThat(userTest.getFirstName()).isEqualTo(("Mike"));
+        userRepository.deleteById(savedUser.getId());
     }
 
     @Test
@@ -186,11 +213,33 @@ class UserControllerTest {
 
     @Test
     void delete() throws Exception {
-        var userCur = userRepository.findByEmail("john@google.com").get();
+        user = generateUser("johnDelete@google.com");
+        if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            savedUser = userRepository.save(user);
+            var passHash = PasswordHashing.getHashPass(user.getPassword());
+        }
+        var userCur = userRepository.findByEmail("johnDelete@google.com").get();
+        token = jwt().jwt(builder -> builder.subject("johnDelete@google.com"));
 
-
-        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(jwt()))
+        /*var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(jwt()))
                 .andExpect(status()
-                .isNoContent());
+                .isNoContent());*/
+
+        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
+                .andExpect(status()
+                        .isNoContent());
+
+
+
+    }
+    @Test
+    void deleteOtherUser() throws Exception {
+        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        var userCur = userRepository.findByEmail("john@google.com").get();
+        var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
+                .andExpect(status()
+                        .isNoContent());
+        var isPresent = userRepository.findByEmail("john@google.com").isPresent();
+        assertThat(isPresent).isTrue();
     }
 }

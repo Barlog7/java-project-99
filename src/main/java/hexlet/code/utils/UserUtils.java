@@ -20,4 +20,9 @@ public class UserUtils {
         return userRepository.findByEmail(email).get();
     }
 
+    public boolean isUserAllow(long userId) {
+        var userConnectId = getCurrentUser().getId();
+        return userConnectId == userId;
+    }
+
 }
