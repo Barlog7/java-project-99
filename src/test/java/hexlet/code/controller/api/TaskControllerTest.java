@@ -278,7 +278,7 @@ class TaskControllerTest {
         Task taskTest = generateTask("test task create", "test task description create", user, taskS);
         //taskRepository.save(taskTest);
         var taskDTOCreate = new TaskCreateDTO();
-        taskDTOCreate.setAssignee_id(Math.toIntExact(user.getId()));
+        taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
         taskDTOCreate.setStatus(taskS.getSlug());
         taskDTOCreate.setTitle("test task create");
         taskDTOCreate.setContent(("test task description create"));

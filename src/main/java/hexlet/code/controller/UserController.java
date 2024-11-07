@@ -6,16 +6,16 @@ import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.UserMapper;
-import hexlet.code.model.User;
+//import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
-import hexlet.code.utils.UserUtils;
+//import hexlet.code.utils.UserUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
+//import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,6 +115,12 @@ public class UserController {
             //if (productData.getPassword().isPresent()) {
             var passHash = PasswordHashing.getHashPass(productData.getPassword().get());
             user.setPassword(passHash);
+        }
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        var userCheck = userRepository.findById(id).get();
+        if (!email.equals(userCheck.getUsername())) {
+            user =  userRepository.findById(id).get();
         }
         userRepository.save(user);
         return userMapper.mapModel(user);

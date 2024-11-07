@@ -128,9 +128,9 @@ public class TaskController {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
         //var checkObject = taskUpdateDTO.getAssigneeId();
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssignee_id())) {
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
         //if (taskUpdateDTO.getAssigneeId() != null) {
-            var idFind = taskUpdateDTO.getAssignee_id().get();
+            var idFind = taskUpdateDTO.getAssigneeid().get();
             var userNew = userRepository.findById(Long.valueOf(idFind)).get();
             task.setAssignee(userNew);
         }
