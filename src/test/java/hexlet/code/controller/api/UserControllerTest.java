@@ -171,6 +171,7 @@ class UserControllerTest {
             savedUser = userRepository.save(user);
             var passHash = PasswordHashing.getHashPass(user.getPassword());
         }
+        token = jwt().jwt(builder -> builder.subject("johnUpdatee@google.com"));
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
@@ -237,7 +238,7 @@ class UserControllerTest {
         var userCur = userRepository.findByEmail("john@google.com").get();
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
                 .andExpect(status()
-                        .isNoContent());
+                        .isForbidden());
         var isPresent = userRepository.findByEmail("john@google.com").isPresent();
         assertThat(isPresent).isTrue();
     }

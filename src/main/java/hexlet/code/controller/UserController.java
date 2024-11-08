@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -83,7 +84,8 @@ public class UserController {
         var email = authentication.getName();
         var user = userRepository.findById(id).get();
         if (!email.equals(user.getUsername())) {
-            return;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            //return;
         }
         if (user.getTasks().isEmpty()) {
             userRepository.deleteById(id);
@@ -120,7 +122,9 @@ public class UserController {
         var email = authentication.getName();
         var userCheck = userRepository.findById(id).get();
         if (!email.equals(userCheck.getUsername())) {
-            user =  userRepository.findById(id).get();
+            //user =  userRepository.findById(id).get();
+
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         userRepository.save(user);
         return userMapper.mapModel(user);
