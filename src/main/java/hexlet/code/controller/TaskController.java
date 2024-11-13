@@ -93,6 +93,12 @@ public class TaskController {
     public TaskDTO create(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
         var task = taskMapper.map(taskCreateDTO);
         updateInTaskStatus(task);
+
+        if (taskCreateDTO.getAssigneeid().get() != null) {
+            var user = userRepository.findById(Long.valueOf(taskCreateDTO.getAssigneeid().get())).get();
+            task.setAssignee(user);
+        }
+
         createLabels(task, taskCreateDTO);
         taskRepository.save(task);
         var taskDTO = taskMapper.mapTask(task);

@@ -18,7 +18,7 @@ import org.instancio.Select;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-//import org.openapitools.jackson.nullable.JsonNullable;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -280,9 +280,9 @@ class TaskControllerTest {
         //taskRepository.save(taskTest);
         var taskDTOCreate = new TaskCreateDTO();
 
-        //JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
-        //taskDTOCreate.setAssigneeid(assigneeNullable);
-        taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
+        JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
+        taskDTOCreate.setAssigneeid(assigneeNullable);
+        //taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
         taskDTOCreate.setStatus(taskS.getSlug());
         taskDTOCreate.setTitle("test task create");
         taskDTOCreate.setContent(("test task description create"));
