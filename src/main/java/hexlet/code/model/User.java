@@ -23,9 +23,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.Instant;
+//import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -50,9 +51,9 @@ public class User implements BaseEntity, UserDetails {
     @Size(min = 3)
     private String password;
     @CreatedDate
-    private Instant createdAt;
+    private Date createdAt;
     @LastModifiedDate
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

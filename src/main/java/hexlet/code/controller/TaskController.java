@@ -94,7 +94,8 @@ public class TaskController {
         var task = taskMapper.map(taskCreateDTO);
         updateInTaskStatus(task);
 
-        if (taskCreateDTO.getAssigneeid().get() != null) {
+        if (jsonNullableMapper.isPresent(taskCreateDTO.getAssigneeid())) {
+        //if (taskCreateDTO.getAssigneeid().get() != null) {
             var user = userRepository.findById(Long.valueOf(taskCreateDTO.getAssigneeid().get())).get();
             task.setAssignee(user);
         }

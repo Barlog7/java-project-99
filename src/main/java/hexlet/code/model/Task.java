@@ -18,7 +18,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+//import java.time.Instant;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class Task implements BaseEntity {
     @JoinColumn(name = "users_id")
     private User assignee;
     @CreatedDate
-    private Instant createdAt;
+    private Date createdAt;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "tasks_labels",

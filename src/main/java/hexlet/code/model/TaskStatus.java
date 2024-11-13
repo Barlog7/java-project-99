@@ -17,8 +17,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+//import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -42,7 +43,7 @@ public class TaskStatus implements BaseEntity {
     @Size(min = 1)
     private String slug;
     @CreatedDate
-    private Instant createdAt;
+    private Date createdAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
