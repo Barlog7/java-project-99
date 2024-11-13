@@ -1,6 +1,7 @@
 package hexlet.code.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.EntityListeners;
@@ -46,6 +47,7 @@ public class Task implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User assignee;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @CreatedDate
     private Date createdAt;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
