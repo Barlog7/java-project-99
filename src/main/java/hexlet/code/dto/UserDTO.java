@@ -1,10 +1,12 @@
 package hexlet.code.dto;
 
+//import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
 
-import java.time.Instant;
+//import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,7 +20,8 @@ public class UserDTO {
 
     private String email;
 
-    private Instant createdAt;
-
-    private Instant updatedAt;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date createdAt;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date updatedAt;
 }

@@ -1,14 +1,17 @@
 package hexlet.code.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+//import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
 public class LabelDTO {
     private Long id;
     private String name;
-    private Instant createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date createdAt;
 }
