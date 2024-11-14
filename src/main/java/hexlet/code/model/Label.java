@@ -35,7 +35,8 @@ public class Label implements BaseEntity  {
     @Column(unique = true)
     @Size(min = 3, max = 1000)
     private String name;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedDate
     private Date createdAt;
     //@ManyToMany(mappedBy = "labels")

@@ -43,7 +43,8 @@ public class TaskStatus implements BaseEntity {
     @Column(unique = true)
     @Size(min = 1)
     private String slug;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedDate
     private Date createdAt;
 

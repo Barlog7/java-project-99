@@ -47,7 +47,8 @@ public class Task implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User assignee;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedDate
     private Date createdAt;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
