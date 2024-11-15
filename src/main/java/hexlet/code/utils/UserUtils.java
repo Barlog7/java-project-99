@@ -25,4 +25,14 @@ public class UserUtils {
         return userConnectId == userId;
     }
 
+    public boolean isUserAdmin() {
+        var userConnectId = getCurrentUser().getId();
+        var adminId = userRepository.findByEmail("hexlet@example.com").get().getId();
+        if (getCurrentUser().getId() == adminId) {
+            return true;
+        }
+        return false;
+    }
+
+
 }
