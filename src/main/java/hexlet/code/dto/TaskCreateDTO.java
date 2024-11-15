@@ -20,7 +20,8 @@ public class TaskCreateDTO {
     private String title;
     private JsonNullable<String> content;
     //private String content;
-    private String status;
+    private JsonNullable<String> status;
+    //private String status;
     private Set<Long> taskLabelIds;
 
 }

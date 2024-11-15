@@ -283,7 +283,10 @@ class TaskControllerTest {
         JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
         taskDTOCreate.setAssigneeid(assigneeNullable);
         //taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
-        taskDTOCreate.setStatus(taskS.getSlug());
+        //JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
+        JsonNullable<String> jsonSlug = JsonNullable.of(taskS.getSlug());
+        taskDTOCreate.setStatus(jsonSlug);
+        //taskDTOCreate.setStatus(taskS.getSlug());
         taskDTOCreate.setTitle("test task create");
         JsonNullable<String> jsonContent = JsonNullable.of("test task description create");
         taskDTOCreate.setContent(jsonContent);
