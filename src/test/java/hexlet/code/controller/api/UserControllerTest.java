@@ -234,12 +234,14 @@ class UserControllerTest {
     }
     @Test
     void deleteOtherUser() throws Exception {
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-        var userCur = userRepository.findByEmail("john@google.com").get();
+        //token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        token = jwt().jwt(builder -> builder.subject("john@google.com"));
+        //var userCur = userRepository.findByEmail("john@google.com").get();
+        var userCur = userRepository.findByEmail("hexlet@example.com").get();
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
                 .andExpect(status()
                         .isForbidden());
-        var isPresent = userRepository.findByEmail("john@google.com").isPresent();
+        var isPresent = userRepository.findByEmail("hexlet@example.com").isPresent();
         assertThat(isPresent).isTrue();
     }
 }
