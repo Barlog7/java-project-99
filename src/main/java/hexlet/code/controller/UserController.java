@@ -108,7 +108,8 @@ public class UserController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@userUtils.isUserAllow(#id)")
+    //@PreAuthorize("@userUtils.isUserAllow(#id)")
+    @PreAuthorize(value = "@userRepository.findById(#id).getEmail() == authentication.name")
     public UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO productData) {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
