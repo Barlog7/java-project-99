@@ -12,12 +12,14 @@ import java.util.Set;
 @Setter
 public class TaskCreateDTO {
 
-    private Integer index;
+    //private Integer index;
+    private JsonNullable<Integer> index;
     @JsonProperty("assignee_id")
     private JsonNullable<Integer> assigneeid;
     //private Integer assigneeid;
     private String title;
-    private String content;
+    private JsonNullable<String> content;
+    //private String content;
     private String status;
     private Set<Long> taskLabelIds;
 

@@ -285,8 +285,12 @@ class TaskControllerTest {
         //taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
         taskDTOCreate.setStatus(taskS.getSlug());
         taskDTOCreate.setTitle("test task create");
-        taskDTOCreate.setContent(("test task description create"));
-        taskDTOCreate.setIndex(1);
+        JsonNullable<String> jsonContent = JsonNullable.of("test task description create");
+        taskDTOCreate.setContent(jsonContent);
+        //taskDTOCreate.setContent(("test task description create"));
+        JsonNullable<Integer> jsonIndex = JsonNullable.of(1);
+        taskDTOCreate.setIndex(jsonIndex);
+        //taskDTOCreate.setIndex(1);
 
         var request = MockMvcRequestBuilders.post("/api/tasks")
                 .with(token)
