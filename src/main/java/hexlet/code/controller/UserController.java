@@ -10,6 +10,7 @@ import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
 //import hexlet.code.utils.UserUtils;
+import hexlet.code.utils.UserUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +44,8 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    /*@Autowired
-    private UserUtils userUtils;*/
+    @Autowired
+    private UserUtils userUtils;
     @GetMapping("")
     public ResponseEntity<List<UserDTO>> index() {
         var users = userRepository.findAll();
@@ -123,7 +124,7 @@ public class UserController {
         var email = authentication.getName();
         //userRepository.findByEmail("hexlet@example.com").get()..
         var userCheck = userRepository.findById(id).get();
-        if (!email.equals(userCheck.getUsername())) {
+        if (!email.equals(userCheck.getUsername()) && !userUtils.isUserAdmin()  ) {
             //user =  userRepository.findById(id).get();
 
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
