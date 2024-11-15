@@ -84,7 +84,7 @@ public class UserController {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var email = authentication.getName();
         var user = userRepository.findById(id).get();
-        if (!email.equals(user.getUsername())) {
+        if (!email.equals(user.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             //return;
         }
@@ -109,8 +109,8 @@ public class UserController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    //@PreAuthorize("@userUtils.isUserAllow(#id) || @userUtils.isUserAdmin()")
-    @PreAuthorize("@userUtils.isUserAllow(#id)")
+    @PreAuthorize("@userUtils.isUserAllow(#id) || @userUtils.isUserAdmin()")
+    //@PreAuthorize("@userUtils.isUserAllow(#id)")
     //@PreAuthorize(value = "@userRepository.findById(#id).getEmail() == authentication.name")
     public UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO productData) {
         var user =  userRepository.findById(id)
@@ -125,12 +125,12 @@ public class UserController {
         var email = authentication.getName();
         //userRepository.findByEmail("hexlet@example.com").get()..
         var userCheck = userRepository.findById(id).get();
-/*        if (!email.equals(userCheck.getUsername()) && !userCheck.getUsername().equals("hexlet@example.com")) {
+        if (!email.equals(userCheck.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
             //if (!email.equals(userCheck.getUsername()) && !userUtils.isUserAdmin()) {
             //user =  userRepository.findById(id).get();
 
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }*/
+        }
         userRepository.save(user);
         return userMapper.mapModel(user);
     }
