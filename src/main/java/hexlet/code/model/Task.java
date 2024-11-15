@@ -40,7 +40,7 @@ public class Task implements BaseEntity {
     private String name;
     private Integer index;
     private String description;
-    @NotNull
+    //@NotNull
     @ManyToOne
     @JoinColumn(name = "task_status_id")
     private TaskStatus taskStatus;
