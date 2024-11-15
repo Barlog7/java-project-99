@@ -125,12 +125,12 @@ public class UserController {
         var email = authentication.getName();
         //userRepository.findByEmail("hexlet@example.com").get()..
         var userCheck = userRepository.findById(id).get();
-        if (!email.equals(userCheck.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
+        /*if (!email.equals(userCheck.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
             //if (!email.equals(userCheck.getUsername()) && !userUtils.isUserAdmin()) {
             //user =  userRepository.findById(id).get();
 
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        }*/
         userRepository.save(user);
         return userMapper.mapModel(user);
     }
