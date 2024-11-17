@@ -114,7 +114,7 @@ public class TaskController {
     private void createLabels(Task task, TaskCreateDTO taskCreateDTO) {
         List<Label> labels = null;
         if (taskCreateDTO.getTaskLabelIds() != null) {
-            labels = labelRepository.findAllById(taskCreateDTO.getTaskLabelIds());
+            labels = labelRepository.findAllById(taskCreateDTO.getTaskLabelIds().get());
         }
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
 

@@ -22,6 +22,6 @@ public class TaskCreateDTO {
     //private String content;
     private JsonNullable<String> status;
     //private String status;
-    private Set<Long> taskLabelIds;
+    private JsonNullable<Set<Long>> taskLabelIds;
 
 }
