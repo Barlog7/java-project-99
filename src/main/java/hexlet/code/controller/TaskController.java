@@ -83,8 +83,12 @@ public class TaskController {
         var task = taskRepository.findById(id).get();
         var user = taskRepository.findById(id).get().getAssignee();
         var status = taskRepository.findById(id).get().getTaskStatus();
-        user.removeTask(task);
-        status.removeTask(task);
+        if (user != null) {
+            user.removeTask(task);
+        }
+        if (status != null) {
+            status.removeTask(task);
+        }
         taskRepository.deleteById(id);
     }
 
