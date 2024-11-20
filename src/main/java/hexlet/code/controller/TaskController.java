@@ -9,6 +9,8 @@ import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -125,19 +128,18 @@ public class TaskController {
 
     }
 
-    private void updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
+    private Set<Label> updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
         List<Label> labels = null;
         if (taskUpdateDTO.getTaskLabelIds().get() != null) {
             labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
         }
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-        if (labels != null) {
+/*        if (labels != null) {
             for (var label : labels) {
                 labelRepository.save(label);
             }
-        }
-        //labelRepository.save(labels);
-
+        }*/
+        return task.getLabelsUsed();
     }
 
     @PutMapping(path = "/{id}")
@@ -145,25 +147,40 @@ public class TaskController {
     public TaskDTO update(@PathVariable Long id, @Valid @RequestBody TaskUpdateDTO taskUpdateDTO) {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
-        //var checkObject = taskUpdateDTO.getAssigneeId();
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
-        //if (taskUpdateDTO.getAssigneeId() != null) {
-            var idFind = taskUpdateDTO.getAssigneeid().get();
-            var userNew = userRepository.findById(Long.valueOf(idFind)).get();
-            task.setAssignee(userNew);
-            userRepository.save(userNew);
-        }
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
-        //if (taskUpdateDTO.getStatus() != null) {
-            var stsusFind = taskUpdateDTO.getStatus().get();
-            var statusNew = taskStatusRepository.findBySlug(stsusFind).get();
-            task.setTaskStatus(statusNew);
-            taskStatusRepository.save(statusNew);
-        }
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
-            updateLabels(task, taskUpdateDTO);
 
+        User userNew = null;
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
+            if (taskUpdateDTO.getAssigneeid().get() != null) {
+                var idFind = taskUpdateDTO.getAssigneeid().get();
+                userNew = userRepository.findById(Long.valueOf(idFind)).get();
+                task.setAssignee(userNew);
+            }
+        } else {
+            userNew = task.getAssignee();
         }
+
+        TaskStatus statusNew = null;
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
+            if (taskUpdateDTO.getAssigneeid().get() != null) {
+                var stsusFind = taskUpdateDTO.getStatus().get();
+                statusNew = taskStatusRepository.findBySlug(stsusFind).get();
+                task.setTaskStatus(statusNew);
+            }
+
+        } else {
+            statusNew = task.getTaskStatus();
+        }
+        Set<Label> setLabel = null;
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
+            setLabel = updateLabels(task, taskUpdateDTO);
+        }
+        if (setLabel != null) {
+            for (var label : setLabel) {
+                labelRepository.save(label);
+            }
+        }
+        userRepository.save(userNew);
+        taskStatusRepository.save(statusNew);
         taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
         return taskMapper.mapTask(task);
