@@ -375,7 +375,9 @@ class TaskControllerTest {
         assertThat(taskTest.getName()).isEqualTo(("test task update change"));
 
 
-        User userNew = generateUser("someupdateNew@mail.com", "12347");
+
+
+        User userNew = generateUser("asomeupdateNew@mail.com", "12347");
         var dataUser = new HashMap<>();
         dataUser.put("assignee_id", Long.valueOf(userNew.getId()));
         var taskFindUpdateUser = taskRepository.findByName("test task update change").get();
@@ -388,10 +390,10 @@ class TaskControllerTest {
                 .andExpect(status().isOk());
         taskTest = taskRepository.findById(taskFindUpdateUser.getId()).get();
 
-        var userFind  = userRepository.findByEmail("someupdateNew@mail.com").get();
+        var userFind  = userRepository.findByEmail("asomeupdateNew@mail.com").get();
         var userFindOld  = userRepository.findByEmail("someupdate@mail.com").get();
         System.out.println("Test");
-        assertThat(taskTest.getAssignee().getEmail()).isEqualTo("someupdateNew@mail.com");
+        assertThat(taskTest.getAssignee().getEmail()).isEqualTo("asomeupdateNew@mail.com");
         var task = userFind.getTasks().get(0);
         assertThat(task).isEqualTo(taskTest);
         assertThat(userFindOld.getTasks().contains(taskTest)).isFalse();
@@ -420,7 +422,7 @@ class TaskControllerTest {
             userRepository.delete(userRepository.findByEmail("someupdate@mail.com").get());
         }
         if (userRepository.findByEmail("someupdateNew@mail.com").isPresent()) {
-            userRepository.delete(userRepository.findByEmail("someupdateNew@mail.com").get());
+            userRepository.delete(userRepository.findByEmail("asomeupdateNew@mail.com").get());
         }
 
     }

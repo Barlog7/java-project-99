@@ -9,8 +9,8 @@ import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-import hexlet.code.model.TaskStatus;
-import hexlet.code.model.User;
+//import hexlet.code.model.TaskStatus;
+//import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+//import java.util.Set;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -128,19 +128,18 @@ public class TaskController {
 
     }
 
-    private Set<Label> updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
+/*    private void updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
         List<Label> labels = null;
         if (taskUpdateDTO.getTaskLabelIds().get() != null) {
             labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
         }
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-/*        if (labels != null) {
+*//*        if (labels != null) {
             for (var label : labels) {
                 labelRepository.save(label);
             }
-        }*/
-        return task.getLabelsUsed();
-    }
+        }*//*
+    }*/
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -148,43 +147,39 @@ public class TaskController {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
 
-        User userNew = null;
+
+        var userNew = task.getAssignee();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
-            if (taskUpdateDTO.getAssigneeid().get() != null) {
-                var idFind = taskUpdateDTO.getAssigneeid().get();
-                userNew = userRepository.findById(Long.valueOf(idFind)).get();
-                task.setAssignee(userNew);
-            }
-        } else {
-            userNew = task.getAssignee();
+            var idFind = taskUpdateDTO.getAssigneeid().get();
+            userNew = userRepository.findById(Long.valueOf(idFind)).get();
         }
 
-        TaskStatus statusNew = null;
+        var statusNew = task.getTaskStatus();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
-            if (taskUpdateDTO.getAssigneeid().get() != null) {
-                var stsusFind = taskUpdateDTO.getStatus().get();
-                statusNew = taskStatusRepository.findBySlug(stsusFind).get();
-                task.setTaskStatus(statusNew);
+            var stsusFind = taskUpdateDTO.getStatus().get();
+            statusNew = taskStatusRepository.findBySlug(stsusFind).get();
+
+        }
+
+        var labelUsed = task.getLabelsUsed();
+        List<Label> labels = null;
+        if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
+            //updateLabels(task, taskUpdateDTO);
+
+            if (taskUpdateDTO.getTaskLabelIds().get() != null) {
+                labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
             }
 
-        } else {
-            statusNew = task.getTaskStatus();
+
         }
-        Set<Label> setLabel = null;
-        if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
-            setLabel = updateLabels(task, taskUpdateDTO);
-        }
-        if (setLabel != null) {
-            for (var label : setLabel) {
-                labelRepository.save(label);
-            }
-        }
-        userRepository.save(userNew);
-        taskStatusRepository.save(statusNew);
         taskMapper.update(taskUpdateDTO, task);
+        task.setAssignee(userNew);
+        task.setTaskStatus(statusNew);
+        task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
+        //taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
+
         return taskMapper.mapTask(task);
     }
-
 
 }
