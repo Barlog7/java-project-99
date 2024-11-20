@@ -131,6 +131,12 @@ public class TaskController {
             labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
         }
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
+        if (labels != null) {
+            for (var label : labels) {
+                labelRepository.save(label);
+            }
+        }
+        //labelRepository.save(labels);
 
     }
 
@@ -145,15 +151,18 @@ public class TaskController {
             var idFind = taskUpdateDTO.getAssigneeid().get();
             var userNew = userRepository.findById(Long.valueOf(idFind)).get();
             task.setAssignee(userNew);
+            userRepository.save(userNew);
         }
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
         //if (taskUpdateDTO.getStatus() != null) {
             var stsusFind = taskUpdateDTO.getStatus().get();
             var statusNew = taskStatusRepository.findBySlug(stsusFind).get();
             task.setTaskStatus(statusNew);
+            taskStatusRepository.save(statusNew);
         }
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
             updateLabels(task, taskUpdateDTO);
+
         }
         taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
