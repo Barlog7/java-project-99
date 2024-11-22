@@ -28,6 +28,9 @@ public class TaskSpecification {
     private Specification<Task> withLabelId(Long labelId) {
         return (root, query, cb) -> labelId == null
                 ? cb.conjunction()
-                : cb.equal(root.join("labels", JoinType.INNER).get("id"), labelId);
+                : cb.equal(root.join("labelsUsed", JoinType.INNER).get("id"), labelId);
+       /* return (root, query, cb) -> labelId == null
+                ? cb.conjunction()
+                : cb.equal(root.get("labels").get("id"), labelId);*/
     }
 }
