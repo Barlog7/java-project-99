@@ -13,7 +13,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-import java.util.HashSet;
+//import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -48,10 +49,11 @@ public abstract class TaskMapper {
     public abstract Task update(TaskUpdateDTO dto, @MappingTarget Task task);
 
     @Named("labelTaskToDto")
-    public static Set<Long> labelTaskToDto(Set<Label> labelsUsed) {
+    public static List<Long> labelTaskToDto(Set<Label> labelsUsed) {
         var list = labelsUsed.stream().map((v -> v.getId())).toList();
-        Set<Long> result = new HashSet<Long>(list);
-        return result;
+        //Set<Long> result = new HashSet<Long>(list);
+        //return result;
+        return list;
     }
 
 /*    @Named("dtoToTask")

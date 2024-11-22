@@ -178,8 +178,9 @@ public class TaskController {
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
         //taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
-
-        return taskMapper.mapTask(task);
+        var returnDto = taskMapper.mapTask(task);
+        return returnDto;
+        //return taskMapper.mapTask(task);
     }
 
 }
