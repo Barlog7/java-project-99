@@ -45,6 +45,7 @@ public class Task implements BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_status_id")
     private TaskStatus taskStatus;
+    //private String taskStatus;
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User assignee;

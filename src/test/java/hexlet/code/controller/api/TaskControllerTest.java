@@ -30,10 +30,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.HashMap;
 import java.util.List;
 
+//import static javax.swing.UIManager.put;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+//import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+//import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -426,5 +429,53 @@ class TaskControllerTest {
         }
 
     }
+
+/*    @Test
+    public void testUpdate() throws Exception {
+        //TestUtils.saveTask(mockMvc, testTask);
+        //var task = TestUtils.getTaskByName(mockMvc, testTask.getName());
+        if (taskRepository.findByName("test task show").isEmpty()) {
+            User user = generateUser("someShow@mail.com", "1234");
+            TaskStatus taskS = generateTaskStatus("task status test show", "task_status_test_show");
+            Task taskTest = generateTask("test task show", "test task description show", user, taskS);
+            taskRepository.save(taskTest);
+        }
+
+        var testTask = taskRepository.findByName("test task show").get();
+        var task = taskRepository.findByName("test task show").get();
+        var data = new HashMap<String, String>();
+        var name = "New Task Name";
+        data.put("title", name);
+
+
+        var request2 = MockMvcRequestBuilders.put("/api/tasks/" + task.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+*//*        var request = put("/api/tasks/{id}", task.getId()).with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));*//*
+
+        var result = mockMvc.perform(request2)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("content").isEqualTo(testTask.getDescription()),
+                v -> v.node("title").isEqualTo(data.get("title")),
+                v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
+                v -> v.node("taskLabelIds").isEqualTo(testTask.getLabelsUsed())
+        );
+
+        //var actualTask = TestUtils.getTaskByName(mockMvc, name);
+        var actualTask = taskRepository.findByName("test task show").get();
+
+        assertEquals(name, actualTask.getName());
+        assertEquals(testTask.getDescription(), actualTask.getDescription());
+        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
+        assertEquals(testTask.getLabelsUsed(), actualTask.getLabelsUsed());
+    }*/
+
 
 }

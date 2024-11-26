@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 //import java.util.Set;
@@ -152,31 +153,39 @@ public class TaskController {
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
             var idFind = taskUpdateDTO.getAssigneeid().get();
             userNew = userRepository.findById(Long.valueOf(idFind)).get();
+            //task.setAssignee(userNew);
         }
 
         var statusNew = task.getTaskStatus();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
             var stsusFind = taskUpdateDTO.getStatus().get();
             statusNew = taskStatusRepository.findBySlug(stsusFind).get();
+            //task.setTaskStatus(statusNew);
 
         }
 
         var labelUsed = task.getLabelsUsed();
-        List<Label> labels = null;
+        List<Label> labels = new ArrayList<>(task.getLabelsUsed());
+                //; (List<Label>) task.getLabelsUsed();
+        //List<Label> labels = null;
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
             //updateLabels(task, taskUpdateDTO);
 
             if (taskUpdateDTO.getTaskLabelIds().get() != null) {
                 labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
             }
+            task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
 
 
         }
         taskMapper.update(taskUpdateDTO, task);
+
+
+
+        //taskMapper.update(taskUpdateDTO, task);
         task.setAssignee(userNew);
         task.setTaskStatus(statusNew);
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-        //taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
         var returnDto = taskMapper.mapTask(task);
         return returnDto;
