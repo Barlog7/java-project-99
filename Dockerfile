@@ -1,9 +1,15 @@
-FROM gradle:8.7.0-jdk21
+FROM eclipse-temurin:21-jdk
+
+ARG GRADLE_VERSION=8.5
 
 WORKDIR /
 
-COPY / .
+COPY ./ .
 
-RUN gradle installDist
+RUN ./gradlew --no-daemon dependencies
 
-CMD ./build/install/app/bin/app —spring.profiles.active=production
+RUN ./gradlew --no-daemon build
+
+EXPOSE 8080
+
+CMD java -jar build/libs/app-0.0.1-SNAPSHOT.jar
