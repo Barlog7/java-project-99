@@ -1,6 +1,5 @@
 package hexlet.code.model;
 
-//import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -17,8 +16,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-//import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +27,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-//@EqualsAndHashCode(of = {"email"})
 public class TaskStatus implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -43,8 +39,6 @@ public class TaskStatus implements BaseEntity {
     @Column(unique = true)
     @Size(min = 1)
     private String slug;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedDate
     private Date createdAt;
 
@@ -59,6 +53,5 @@ public class TaskStatus implements BaseEntity {
 
     public void removeTask(Task task) {
         tasks.remove(task);
-        //task.setTaskStatus(null);
     }
 }

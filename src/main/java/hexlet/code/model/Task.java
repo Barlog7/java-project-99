@@ -19,8 +19,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-//import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -41,16 +39,13 @@ public class Task implements BaseEntity {
     private String name;
     private Integer index;
     private String description;
-    //@NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_status_id")
     private TaskStatus taskStatus;
-    //private String taskStatus;
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User assignee;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+
     @CreatedDate
     private Date createdAt;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)

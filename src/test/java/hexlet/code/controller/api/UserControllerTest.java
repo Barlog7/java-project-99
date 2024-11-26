@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 //import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-//import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,14 +86,6 @@ class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-/*        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .apply(springSecurity())
-                .build();*/
-/*        var authentication = new UsernamePasswordAuthenticationToken(
-                "hexlet@example.com", "qwerty");
-
-        authenticationManager.authenticate(authentication);*/
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         user = generateUser("john@google.com");
@@ -221,10 +212,6 @@ class UserControllerTest {
         var userCur = userRepository.findByEmail("johnDelete@google.com").get();
         token = jwt().jwt(builder -> builder.subject("johnDelete@google.com"));
 
-        /*var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(jwt()))
-                .andExpect(status()
-                .isNoContent());*/
-
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
                 .andExpect(status()
                         .isNoContent());
@@ -234,9 +221,7 @@ class UserControllerTest {
     }
     @Test
     void deleteOtherUser() throws Exception {
-        //token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         token = jwt().jwt(builder -> builder.subject("john@google.com"));
-        //var userCur = userRepository.findByEmail("john@google.com").get();
         var userCur = userRepository.findByEmail("hexlet@example.com").get();
         var request = mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userCur.getId()).with(token))
                 .andExpect(status()

@@ -6,17 +6,14 @@ import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.UserMapper;
-//import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.PasswordHashing;
-//import hexlet.code.utils.UserUtils;
 import hexlet.code.utils.UserUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,17 +67,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("@userUtils.isUserAllow(#id)")
     public void delete(@PathVariable Long id) {
-/*        User UserEnter =  userUtils.getCurrentUser();
-        var UniqeName = UserEnter.getUsername();*/
-        //var userUtils = new UserUtils();
-        //var userConnect = userUtils.getCurrentUser();
-/*        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return;
-        }
-        var email = authentication.getName();*/
-/*        var userUtils = new UserUtils();
-        var userConnect = userUtils.getCurrentUser();*/
+
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var email = authentication.getName();
         var user = userRepository.findById(id).get();
@@ -110,8 +97,6 @@ public class UserController {
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userUtils.isUserAllow(#id) || @userUtils.isUserAdmin()")
-    //@PreAuthorize("@userUtils.isUserAllow(#id)")
-    //@PreAuthorize(value = "@userRepository.findById(#id).getEmail() == authentication.name")
     public UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO productData) {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
@@ -123,14 +108,8 @@ public class UserController {
         }
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var email = authentication.getName();
-        //userRepository.findByEmail("hexlet@example.com").get()..
         var userCheck = userRepository.findById(id).get();
-        /*if (!email.equals(userCheck.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
-            //if (!email.equals(userCheck.getUsername()) && !userUtils.isUserAdmin()) {
-            //user =  userRepository.findById(id).get();
 
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }*/
         userRepository.save(user);
         return userMapper.mapModel(user);
     }

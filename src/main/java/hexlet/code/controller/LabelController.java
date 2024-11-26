@@ -54,16 +54,12 @@ public class LabelController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         var label = labelRepository.findById(id).get();
-        //var user = taskRepository.findById(id).get().getAssignee();
-        //var status = taskRepository.findById(id).get().getTaskStatus();
-        //user.removeTask(task);
-        //status.removeTask(task);
+
         if (labelRepository.findById(id).get().getTasks().isEmpty()) {
             labelRepository.deleteById(id);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        //labelRepository.deleteById(id);
     }
 
     @PostMapping(path = "")

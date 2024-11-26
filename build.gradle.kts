@@ -30,7 +30,7 @@ tasks.sentryBundleSourcesJava {
 group = "hexlet.code"
 version = "0.0.1-SNAPSHOT"
 
-//application { mainClass.set("hexlet.code.AppApplication") }
+
 application {
 	mainClass = "hexlet.code.AppApplication"
 }
@@ -86,21 +86,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	testImplementation("org.springframework.security:spring-security-test")
 
-	//testImplementation("org.springframework.boot:spring-boot-starter-test")
-// Понадобится когда мы начнем работать с аутентификацией
 
 
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-/*	testLogging {
-		//exceptionFormat = TestExceptionFormat.FULL
-		//events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
-		// showStackTraces = true
-		// showCauses = true
-		showStandardStreams = true
-	}*/
+
 	testLogging {
 		exceptionFormat = TestExceptionFormat.FULL
 		events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)

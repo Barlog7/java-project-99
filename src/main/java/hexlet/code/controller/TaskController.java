@@ -9,8 +9,6 @@ import hexlet.code.mapper.JsonNullableMapper;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-//import hexlet.code.model.TaskStatus;
-//import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -33,36 +31,28 @@ import org.springframework.web.bind.annotation.PutMapping;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-//import java.util.Set;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
-
     @Autowired
     private TaskMapper taskMapper;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private LabelRepository labelRepository;
     @Autowired
     private TaskStatusRepository taskStatusRepository;
-
-
     @Autowired
     private JsonNullableMapper jsonNullableMapper;
-
     @Autowired
     private TaskSpecification taskSpecification;
 
     @GetMapping("")
     public ResponseEntity<List<TaskDTO>> index(TaskParamDTO param) {
         var spec = taskSpecification.build(param);
-        //var tasks = taskRepository.findAll();
         var tasks = taskRepository.findAll(spec);
         var taskDTO = tasks.stream()
                 .map(taskMapper::mapTask)
@@ -126,21 +116,7 @@ public class TaskController {
             labels = labelRepository.findAllById(taskCreateDTO.getTaskLabelIds().get());
         }
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-
     }
-
-/*    private void updateLabels(Task task, TaskUpdateDTO taskUpdateDTO) {
-        List<Label> labels = null;
-        if (taskUpdateDTO.getTaskLabelIds().get() != null) {
-            labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
-        }
-        task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-*//*        if (labels != null) {
-            for (var label : labels) {
-                labelRepository.save(label);
-            }
-        }*//*
-    }*/
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -148,48 +124,35 @@ public class TaskController {
         var task =  taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
 
-
         var userNew = task.getAssignee();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
             var idFind = taskUpdateDTO.getAssigneeid().get();
             userNew = userRepository.findById(Long.valueOf(idFind)).get();
-            //task.setAssignee(userNew);
         }
 
         var statusNew = task.getTaskStatus();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
             var stsusFind = taskUpdateDTO.getStatus().get();
             statusNew = taskStatusRepository.findBySlug(stsusFind).get();
-            //task.setTaskStatus(statusNew);
-
         }
 
         var labelUsed = task.getLabelsUsed();
         List<Label> labels = new ArrayList<>(task.getLabelsUsed());
-                //; (List<Label>) task.getLabelsUsed();
-        //List<Label> labels = null;
+
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getTaskLabelIds())) {
-            //updateLabels(task, taskUpdateDTO);
 
             if (taskUpdateDTO.getTaskLabelIds().get() != null) {
                 labels = labelRepository.findAllById(taskUpdateDTO.getTaskLabelIds().get());
             }
             task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
-
-
         }
         taskMapper.update(taskUpdateDTO, task);
 
-
-
-        //taskMapper.update(taskUpdateDTO, task);
         task.setAssignee(userNew);
         task.setTaskStatus(statusNew);
         task.setLabelsUsed(labels != null ? new HashSet<>(labels) : new HashSet<>());
         taskRepository.save(task);
         var returnDto = taskMapper.mapTask(task);
         return returnDto;
-        //return taskMapper.mapTask(task);
     }
-
 }

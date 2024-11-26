@@ -31,19 +31,15 @@ public abstract class TaskMapper {
     @Mapping(target = "title", source = "name")
     @Mapping(target = "content", source = "description")
     @Mapping(target = "status", source = "taskStatus.slug")
-    //@Mapping(target = "labelsUsed", source = "taskStatus.slug")
-    //@Mapping(target = "taskLabelIds", expression = "java(labelsToLabelIds(task.getLabels()))")
     @Mapping(source = "labelsUsed", target = "taskLabelIds", qualifiedByName = "labelTaskToDto")
     public abstract TaskDTO mapTask(Task task);
 
     @Mapping(target = "name", source = "title")
-    //@Mapping(target = "assignee", source = "assigneeid")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus.slug", source = "status")
     public abstract Task map(TaskCreateDTO dto);
 
     @Mapping(target = "name", source = "title")
-    //@Mapping(target = "assignee.id", source = "assigneeid")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus.slug", source = "status")
     public abstract Task update(TaskUpdateDTO dto, @MappingTarget Task task);
@@ -53,13 +49,6 @@ public abstract class TaskMapper {
         var list = labelsUsed.stream().map((v -> v.getId())).toList();
         Set<Long> result = new HashSet<Long>(list);
         return result;
-        //return list;
     }
 
-/*    @Named("dtoToTask")
-    public static Set<Long> labelTaskToDto(Set<Long> dto) {
-        var list = dto.stream().map((v -> v.getId())).toList();
-        Set<Long> result = new HashSet<Long>(list);
-        return result;
-    }*/
 }

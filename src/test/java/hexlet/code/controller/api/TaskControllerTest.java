@@ -30,13 +30,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.HashMap;
 import java.util.List;
 
-//import static javax.swing.UIManager.put;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-//import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-//import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -203,7 +201,6 @@ class TaskControllerTest {
             taskRepository.save(taskTest);
         }
         var savedFind = taskRepository.findByName("test task show").get();
-        ///var id = taskTest.getId();
         var result = mockMvc.perform(get("/api/tasks/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();
         var body = result.getContentAsString();
@@ -280,23 +277,17 @@ class TaskControllerTest {
         User user = generateUser("somenew@mail.com", "12345");
         TaskStatus taskS = generateTaskStatus("task status test create", "task_status_test_create");
         Task taskTest = generateTask("test task create", "test task description create", user, taskS);
-        //taskRepository.save(taskTest);
         var taskDTOCreate = new TaskCreateDTO();
 
         JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
         taskDTOCreate.setAssigneeid(assigneeNullable);
-        //taskDTOCreate.setAssigneeid(Math.toIntExact(user.getId()));
-        //JsonNullable<Integer> assigneeNullable = JsonNullable.of(Math.toIntExact(user.getId()));
         JsonNullable<String> jsonSlug = JsonNullable.of(taskS.getSlug());
         taskDTOCreate.setStatus(jsonSlug);
-        //taskDTOCreate.setStatus(taskS.getSlug());
         taskDTOCreate.setTitle("test task create");
         JsonNullable<String> jsonContent = JsonNullable.of("test task description create");
         taskDTOCreate.setContent(jsonContent);
-        //taskDTOCreate.setContent(("test task description create"));
         JsonNullable<Integer> jsonIndex = JsonNullable.of(1);
         taskDTOCreate.setIndex(jsonIndex);
-        //taskDTOCreate.setIndex(1);
 
         var request = MockMvcRequestBuilders.post("/api/tasks")
                 .with(token)
@@ -430,10 +421,9 @@ class TaskControllerTest {
 
     }
 
-/*    @Test
+    @Test
     public void testUpdate() throws Exception {
-        //TestUtils.saveTask(mockMvc, testTask);
-        //var task = TestUtils.getTaskByName(mockMvc, testTask.getName());
+
         if (taskRepository.findByName("test task show").isEmpty()) {
             User user = generateUser("someShow@mail.com", "1234");
             TaskStatus taskS = generateTaskStatus("task status test show", "task_status_test_show");
@@ -452,9 +442,7 @@ class TaskControllerTest {
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
-*//*        var request = put("/api/tasks/{id}", task.getId()).with(jwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));*//*
+
 
         var result = mockMvc.perform(request2)
                 .andExpect(status().isOk())
@@ -462,20 +450,15 @@ class TaskControllerTest {
         var body = result.getResponse().getContentAsString();
 
         assertThatJson(body).and(
-                v -> v.node("content").isEqualTo(testTask.getDescription()),
+
                 v -> v.node("title").isEqualTo(data.get("title")),
-                v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
                 v -> v.node("taskLabelIds").isEqualTo(testTask.getLabelsUsed())
         );
 
         //var actualTask = TestUtils.getTaskByName(mockMvc, name);
-        var actualTask = taskRepository.findByName("test task show").get();
+        var actualTask = taskRepository.findByName("New Task Name").get();
+        assertEquals(actualTask.getLabelsUsed(), testTask.getLabelsUsed());
 
-        assertEquals(name, actualTask.getName());
-        assertEquals(testTask.getDescription(), actualTask.getDescription());
-        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
-        assertEquals(testTask.getLabelsUsed(), actualTask.getLabelsUsed());
-    }*/
-
+    }
 
 }

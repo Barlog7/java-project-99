@@ -98,7 +98,7 @@ class TaskStatusControllerTest {
         taskStatusRepository.save(taskTestShow);
         var savedFind = taskStatusRepository.findBySlug("test_status_show").get();
 
-        //var savedFind = taskStatusRepository.findBySlug("draft").get();
+
         var id = savedFind.getId();
         var result = mockMvc.perform(get("/api/task_statuses/" + savedFind.getId()).with(jwt()))
                 .andExpect(status().isOk()).andReturn().getResponse();

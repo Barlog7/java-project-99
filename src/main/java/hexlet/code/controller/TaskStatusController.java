@@ -40,7 +40,6 @@ public class TaskStatusController {
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(taskStatusDTO.size()))
                 .body(taskStatusDTO);
-        //return taskDTO;
     }
     @GetMapping("/{id}")
     public TaskStatusDTO show(@PathVariable long id) {
@@ -58,7 +57,6 @@ public class TaskStatusController {
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
     }
 
     @PostMapping(path = "")
