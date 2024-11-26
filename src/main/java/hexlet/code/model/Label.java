@@ -1,6 +1,5 @@
 package hexlet.code.model;
 
-//import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.EntityListeners;
@@ -16,7 +15,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-//import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 
