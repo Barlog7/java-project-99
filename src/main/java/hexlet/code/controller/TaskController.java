@@ -126,14 +126,21 @@ public class TaskController {
 
         var userNew = task.getAssignee();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getAssigneeid())) {
-            var idFind = taskUpdateDTO.getAssigneeid().get();
-            userNew = userRepository.findById(Long.valueOf(idFind)).get();
+            if (taskUpdateDTO.getAssigneeid().get() != null) {
+                var idFind = taskUpdateDTO.getAssigneeid().get();
+                userNew = userRepository.findById(Long.valueOf(idFind)).get();
+            } else {
+                userNew = null;
+            }
+
         }
 
         var statusNew = task.getTaskStatus();
         if (jsonNullableMapper.isPresent(taskUpdateDTO.getStatus())) {
             var stsusFind = taskUpdateDTO.getStatus().get();
+            statusNew.removeTask(task);
             statusNew = taskStatusRepository.findBySlug(stsusFind).get();
+            statusNew.addTask(task);
         }
 
         var labelUsed = task.getLabelsUsed();
