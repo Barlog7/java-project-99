@@ -71,7 +71,8 @@ public class UserController {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var email = authentication.getName();
         var user = userRepository.findById(id).get();
-        if (!email.equals(user.getUsername()) && !authentication.getName().equals("hexlet@example.com")) {
+        //if (!email.equals(user.getUsername()) && !authentication.getName().equals("hexlet@example.com"))
+        if (!email.equals(user.getUsername()) ) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             //return;
         }
@@ -100,14 +101,22 @@ public class UserController {
     public UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO productData) {
         var user =  userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        if (!email.equals(user.getUsername()) ) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            //return;
+        }
+
         userMapper.update(productData, user);
         if (jsonNullableMapper.isPresent(productData.getPassword())) {
             //if (productData.getPassword().isPresent()) {
             var passHash = PasswordHashing.getHashPass(productData.getPassword().get());
             user.setPassword(passHash);
         }
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var email = authentication.getName();
+        /*var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();*/
         var userCheck = userRepository.findById(id).get();
 
         userRepository.save(user);
