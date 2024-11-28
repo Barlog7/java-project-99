@@ -72,7 +72,7 @@ public class UserController {
         var email = authentication.getName();
         var user = userRepository.findById(id).get();
         //if (!email.equals(user.getUsername()) && !authentication.getName().equals("hexlet@example.com"))
-        if (!email.equals(user.getUsername()) ) {
+        if (!email.equals(user.getUsername())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             //return;
         }
@@ -104,7 +104,7 @@ public class UserController {
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var email = authentication.getName();
-        if (!email.equals(user.getUsername()) ) {
+        if (!email.equals(user.getUsername())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             //return;
         }
