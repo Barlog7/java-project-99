@@ -16,3 +16,7 @@ https://java-project-99-cgkv.onrender.com/index.html#/login
 
 ### **Главная страница**
 https://java-project-99-cgkv.onrender.com/index.html#/login
+
+admin user: hexlet@example.com
+
+admin password: qwerty
